@@ -1,0 +1,43 @@
+{
+  "archive_business_orgs_spr": {
+    "main_schema": {
+      "schema_name": "public",
+      "table_name": "business_orgs_spr",
+      "columns": [
+        "id",
+        "business_org_code",
+        "short_name",
+        "node_name",
+        "created_at",
+        "updated_at",
+        "deleted_at"
+      ]
+    },
+    "archive_schema": {
+      "schema_name": "archive",
+      "table_name": "business_orgs_spr",
+      "columns": [
+        "archivation_id",
+        "id",
+        "business_org_code",
+        "short_name",
+        "node_name",
+        "created_at",
+        "updated_at",
+        "deleted_at"
+      ]
+    }
+  },
+  "archive_product_graphs": {
+    "main_schema": {
+      "schema_name": "public",
+      "table_names": [],
+      "columns": []
+    },
+    "archive_schema": {
+      "schema_name": "archive",
+      "table_names": [],
+      "columns": []
+    }
+  }
+}

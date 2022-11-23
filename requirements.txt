@@ -1,0 +1,5 @@
+pandas
+pika==1.3.0
+psycopg2
+openpyxl
+xlrd

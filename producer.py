@@ -4,7 +4,7 @@ import os
 import random
 
 
-def run(rabbit_host, rabbit_port):
+def run(rabbit_host, rabbit_port, data=None):
     connection_params = pika.ConnectionParameters(rabbit_host, rabbit_port)
     conn = pika.BlockingConnection(connection_params)
     ch = conn.channel()
@@ -15,7 +15,8 @@ def run(rabbit_host, rabbit_port):
 
 
     file_loc = r"1_year/scenario/production_graph (1).xlsx"
-    data = {
+    if data is None:
+        data = {
         "task_id": task_id,
         "metaload_user_id": 0,
         "metaload_dataset_id": 3,
@@ -24,7 +25,7 @@ def run(rabbit_host, rabbit_port):
         "file_id": -1,
         "filename": "some_name",
         "metaload_comment": "Заархивирован файл: фыадлыжадлфркрф",
-    }
+        }
 
     # data = {
     #     "task_id": task_id,

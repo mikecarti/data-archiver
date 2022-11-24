@@ -100,7 +100,7 @@ class DataManager:
         return data
 
 
-if __name__ == "__main__":
+def main():
     rabbit_broker = os.environ['RABBIT_HOST'] if 'RABBIT_HOST' in os.environ else "localhost"
     rabbit_port = int(os.environ['RABBIT_PORT']) if 'RABBIT_PORT' in os.environ else 15555
     db_name = os.environ['DB_NAME'] if 'DB_NAME' in os.environ else "ebitda"
@@ -124,3 +124,6 @@ if __name__ == "__main__":
             pass
         time.sleep(5)
 
+
+if __name__ == "__main__":
+    main()

@@ -17,14 +17,14 @@ class ProductGraphArchiver(CommonDataArchiver):
         id_archive_name = self.get_archivation_id_col()
         self.copy_tables(from_tables, to_tables, id_archive_name, where_cols=[metaload_id_col], equal_to_values=[meta_dataset_id])
 
+    def copy_metadata_entry(self, metaload_dataset_id):
+        pass
+
     def get_archivation_id_col(self):
-        id_archive_name_nodes = self.config["archive_schema"]["tables"]["production_graph_nodes"]["columns"][0]
-        id_archive_name_edges = self.config["archive_schema"]["tables"]["production_graph_edges"]["columns"][0]
+        id_archive_name_nodes = self.config["archive_schema"]["tables"]["production_graph_nodes"]["req_cols"]["archive_id"]
+        id_archive_name_edges = self.config["archive_schema"]["tables"]["production_graph_edges"]["req_cols"]["archive_id"]
         if id_archive_name_edges != id_archive_name_nodes:
-            raise KeyError(
-                'В файле json table_data_schemas.json, ["archive_product_graphs"]["archive_schema"]["tables"]["production_graph_edges"]["columns"] ,'
-                'В файле json table_data_schemas.json, ["archive_product_graphs"]["archive_schema"]["tables"]["production_graph_nodes"]["columns"], '
-                'первым элементом должен стоять одинаковый string отображающий "archivation_id"')
+            raise KeyError("разные наименования id_archive_name в edges и nodes в json")
         return id_archive_name_nodes
 
     def get_metaload_id_col(self, schema):
@@ -32,8 +32,8 @@ class ProductGraphArchiver(CommonDataArchiver):
         :param schema:
         :return: metaload_id_col
         """
-        edges_metaload_id_col = self.in_schemas["archive_production_graph"][schema]["tables"]["production_graph_edges"]["columns"][0]
-        nodes_metaload_id_col = self.in_schemas["archive_production_graph"][schema]["tables"]["production_graph_nodes"]["columns"][0]
+        edges_metaload_id_col = self.in_schemas["archive_production_graph"][schema]["tables"]["production_graph_edges"]["req_cols"]["metaload_dataset_id"]
+        nodes_metaload_id_col = self.in_schemas["archive_production_graph"][schema]["tables"]["production_graph_edges"]["req_cols"]["metaload_dataset_id"]
 
         if edges_metaload_id_col != nodes_metaload_id_col:
             raise KeyError('В файле json table_data_schemas.json, ["archive_production_graph"]["main_schema"]["tables"]["production_graph_edges"]["columns"] ,'
@@ -41,3 +41,4 @@ class ProductGraphArchiver(CommonDataArchiver):
                            'первым элементом должен стоять одинаковый string отображающий "metaload_dataset_id"')
 
         return edges_metaload_id_col
+

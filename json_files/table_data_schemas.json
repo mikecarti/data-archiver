@@ -4,15 +4,8 @@
       "schema_name": "public",
       "tables": {
         "business_orgs_spr": {
-          "columns": [
-            "id",
-            "business_org_code",
-            "short_name",
-            "node_name",
-            "created_at",
-            "updated_at",
-            "deleted_at"
-          ]
+          "req_cols": {
+          }
         }
       }
     },
@@ -20,129 +13,53 @@
       "schema_name": "archive",
       "tables": {
         "business_orgs_spr": {
-          "columns": [
-            "archivation_id",
-            "id",
-            "business_org_code",
-            "short_name",
-            "node_name",
-            "created_at",
-            "updated_at",
-            "deleted_at"
-          ]
+          "req_cols": {
+            "archivation_id": "archivation_id"
+          }
         }
       }
     }
   },
-
   "archive_production_graph": {
     "main_schema": {
       "schema_name": "public",
       "tables": {
         "production_graph_edges": {
-          "columns": [
-            "metaload_dataset_id",
-            "target_node_name",
-            "edge_type",
-            "source_node_name",
-            "year",
-            "source_node_code",
-            "transport_code",
-            "influence_coefficient",
-            "target_node_code",
-            "storage_code",
-            "id",
-            "storage_name",
-            "transport_name"
-          ]
+          "req_cols": {
+            "metaload_dataset_id": "metaload_dataset_id"
+          }
         },
         "production_graph_nodes": {
-          "columns": [
-            "metaload_dataset_id",
-            "business_org_code",
-            "business_org_name",
-            "coeff_minus",
-            "coord_x",
-            "coord_y",
-            "delay_time",
-            "fix_component_code",
-            "id",
-            "is_cost_product",
-            "is_fix_content",
-            "level",
-            "max_power",
-            "node_code",
-            "node_name",
-            "node_type",
-            "nzp_max_volume",
-            "period",
-            "product_for",
-            "product_type",
-            "production_unit_code",
-            "production_unit_name",
-            "redev_code",
-            "redev_name",
-            "short_name",
-            "storage_params",
-            "tag_alternative",
-            "year"
-          ]
-        }
+          "req_cols": {
+            "metaload_dataset_id": "metaload_dataset_id"
+          }
+        },
+        "upload_files": {
+          "req_cols": {
+            "metaload_dataset_id": "id"
+          }
       }
     },
     "archive_schema": {
       "schema_name": "archive",
       "tables": {
         "production_graph_edges": {
-          "columns": [
-            "archivation_id",
-            "metaload_dataset_id",
-            "target_node_name",
-            "edge_type",
-            "source_node_name",
-            "year",
-            "source_node_code",
-            "transport_code",
-            "influence_coefficient",
-            "target_node_code",
-            "storage_code",
-            "id",
-            "storage_name",
-            "transport_name"
-          ]
+          "req_cols": {
+            "metaload_dataset_id": "metaload_dataset_id",
+            "archive_id": "archivation_id"
+          }
         },
         "production_graph_nodes": {
-          "columns": [
-            "archivation_id",
-            "metaload_dataset_id",
-            "business_org_code",
-            "business_org_name",
-            "coeff_minus",
-            "coord_x",
-            "coord_y",
-            "delay_time",
-            "fix_component_code",
-            "id",
-            "is_cost_product",
-            "is_fix_content",
-            "level",
-            "max_power",
-            "node_code",
-            "node_name",
-            "node_type",
-            "nzp_max_volume",
-            "period",
-            "product_for",
-            "product_type",
-            "production_unit_code",
-            "production_unit_name",
-            "redev_code",
-            "redev_name",
-            "short_name",
-            "storage_params",
-            "tag_alternative",
-            "year"
-          ]
+          "req_cols": {
+            "metaload_dataset_id": "metaload_dataset_id",
+            "archive_id": "archivation_id"
+          }
+        },
+        "upload_files": {
+          "req_cols": {
+            "metaload_dataset_id": "id"
+          }
+        }
         }
       }
     }

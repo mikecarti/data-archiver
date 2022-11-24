@@ -27,7 +27,7 @@ def run(rabbit_host, rabbit_port):
 
     data = {
         "task_id": task_id,
-        "metaload_user_id": 3,
+        "metaload_user_id": 0,
         "file_type": "archive_production_graph",
         "file_type_name": "Производственный граф",
         "file_id": -1,

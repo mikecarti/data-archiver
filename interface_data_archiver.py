@@ -5,7 +5,7 @@ import logging
 import logging.config
 
 from archivers.business_org_archiver import BusinessOrgArchiver
-from archivers.product_graph_archiver import ProductGraphArchiver
+from archivers.production_graph_archiver import ProductGraphArchiver
 
 
 class DataArchiver:

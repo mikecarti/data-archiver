@@ -15,26 +15,27 @@ def run(rabbit_host, rabbit_port):
 
 
     file_loc = r"1_year/scenario/production_graph (1).xlsx"
-    # data = {
-    #     "task_id": task_id,
-    #     "metaload_user_id": 1,
-    #     "file_type": "archive_business_orgs_spr",
-    #     "file_type_name": "Производственный граф",
-    #     "file_id": -1,
-    #     "filename": "some_name",
-    #     "metaload_comment": "Заархивирован файл: фыадлыжадлфркрф",
-    # }
-
     data = {
         "task_id": task_id,
         "metaload_user_id": 0,
         "metaload_dataset_id": 3,
-        "file_type": "archive_production_graph",
+        "file_type": "archive_business_orgs_spr",
         "file_type_name": "Производственный граф",
         "file_id": -1,
         "filename": "some_name",
         "metaload_comment": "Заархивирован файл: фыадлыжадлфркрф",
     }
+
+    # data = {
+    #     "task_id": task_id,
+    #     "metaload_user_id": 0,
+    #     "metaload_dataset_id": 3,
+    #     "file_type": "archive_production_graph",
+    #     "file_type_name": "Производственный граф",
+    #     "file_id": -1,
+    #     "filename": "some_name",
+    #     "metaload_comment": "Заархивирован файл: фыадлыжадлфркрф",
+    # }
 
     ch.basic_publish(
         exchange="",

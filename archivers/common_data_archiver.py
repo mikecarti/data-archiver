@@ -29,7 +29,7 @@ class CommonDataArchiver:
 
         if from_schema is None: from_schema = self.in_schemas[self.task_type]["main_schema"]["schema_name"]
         if to_schema is None: to_schema = self.in_schemas[self.task_type]["archive_schema"]["schema_name"]
-        from_columns = ", ".join(self.conn.get_column_names(from_table, from_schema))
+        from_columns = self._get_intersecting_columns(from_schema, from_table, to_schema, to_table)
         _id = self.conn.get_max_col_number(to_table, to_schema, id_name)
 
         if equals_to is None:
@@ -38,6 +38,13 @@ class CommonDataArchiver:
         else:
             self.conn.copy_table_where(from_table, to_table, from_schema, to_schema,
                                        from_columns, _id + 1, id_name, where_col, equals_to)
+
+    def _get_intersecting_columns(self, from_schema, from_table, to_schema, to_table):
+        from_columns = self.conn.get_column_names(from_table, from_schema)
+        to_columns = self.conn.get_column_names(to_table, to_schema)
+        intersect_cols = list(set(from_columns) & set(to_columns))
+        formatted_cols = ", ".join(intersect_cols)
+        return formatted_cols
 
     def copy_tables(self, from_tables, to_tables, id_archive_name, where_cols, equal_to_values):
         """

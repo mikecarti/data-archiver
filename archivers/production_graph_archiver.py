@@ -17,8 +17,21 @@ class ProductGraphArchiver(CommonDataArchiver):
         id_archive_name = self.get_archivation_id_col()
         self.copy_tables(from_tables, to_tables, id_archive_name, where_cols=[metaload_id_col], equal_to_values=[meta_dataset_id])
 
-    def copy_metadata_entry(self, metaload_dataset_id):
-        pass
+    def copy_metadata_entry(self, meta_dataset_id):
+        """
+        :param meta_dataset_id: ID ряда в upload_files, который будет скопирован в архив
+        :return:
+        """
+        pub_upload = self.config["main_schema"]["tables"]["upload_files"]
+        arch_upload = self.config["archive_schema"]["tables"]["upload_files"]
+
+        from_table = pub_upload["table_name"]
+        to_table = arch_upload["table_name"]
+        archive_id_col = arch_upload["req_cols"]["archive_id"]
+        meta_dataset_col = pub_upload["req_cols"]["metaload_dataset_id"]
+
+        self.copy_table(from_table, to_table, archive_id_col,
+                   where_col=meta_dataset_col, equals_to=meta_dataset_id)
 
     def get_archivation_id_col(self):
         id_archive_name_nodes = self.config["archive_schema"]["tables"]["production_graph_nodes"]["req_cols"]["archive_id"]

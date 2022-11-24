@@ -16,6 +16,8 @@ class ProductGraphArchiver(CommonDataArchiver):
         from_tables.remove(self.config["main_schema"]["tables"]["upload_files"]["table_name"])
         to_tables.remove(self.config["archive_schema"]["tables"]["upload_files"]["table_name"])
 
+        self.copy_metadata_entry(meta_dataset_id)
+
         metaload_id_col = self.get_metaload_id_col(schema="main_schema")
         id_archive_name = self.get_archivation_id_col()
         self.copy_tables(from_tables, to_tables, id_archive_name, where_cols=[metaload_id_col], equal_to_values=[meta_dataset_id])

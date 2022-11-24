@@ -42,7 +42,7 @@ class DataArchiver:
             prod_arch = ProductGraphArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
             status = prod_arch.run(d)
         else:
-            pass
+            print(f"Unregistered file_type / task_type: {task_type}")
 
         comment = self.stream.getvalue()
         self.stream.seek(0)

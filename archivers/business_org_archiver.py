@@ -8,10 +8,10 @@ class BusinessOrgArchiver(CommonDataArchiver):
 
     def run(self, d):
         print("Business Org Archiver running")
-        from_table = self.config["main_schema"]["table_name"]
-        to_table = self.config["archive_schema"]["table_name"]
+        from_table = list(self.config["main_schema"]["tables"].keys())[0]
+        to_table = list(self.config["archive_schema"]["tables"].keys())[0]
         self.archive_table(from_table, to_table)
 
     def archive_table(self, from_table, to_table, from_schema=None, to_schema=None):
-        id_archive_name = self.config["archive_schema"]["columns"][0]
+        id_archive_name = self.config["archive_schema"]["tables"]["business_orgs_spr"]["columns"][0]
         self.copy_table(from_schema, from_table, to_schema, to_table, id_archive_name)

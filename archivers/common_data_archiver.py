@@ -12,10 +12,7 @@ class CommonDataArchiver:
         self.config = in_schemas[task_type]
 
 
-    def get_table_name(self, table):
-        return self.in_schemas[table]["table_name"]
-
-    def copy_table(self, from_schema, from_table, to_schema, to_table, id_name):
+    def copy_table(self, from_schema, from_table, to_schema, to_table, id_name, where_cols=None, equal_to_valus=None):
         """
         Copies the table in an append-like fashion
 
@@ -34,4 +31,13 @@ class CommonDataArchiver:
 
 
 
+    def archive_tables(self, from_tables, to_tables, where_cols, equal_to_values):
+        """
+        :param from_tables:
+        :param to_tables:
+        :param where_cols:
+        :param equal_to_values:
+        :return:
+        """
+        pass
 

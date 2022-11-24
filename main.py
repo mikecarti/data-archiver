@@ -5,7 +5,7 @@ import time
 import functools
 from psycopg2.errors import OperationalError
 from pika.exceptions import AMQPConnectionError
-from v2.db_con import DBCon
+from db_con import DBCon
 import pandas as pd
 from io import StringIO
 

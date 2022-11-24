@@ -10,7 +10,7 @@ class ProductGraphArchiver(CommonDataArchiver):
         print("Product Graph Archiver running")
         from_tables = self._keys(self.config["main_schema"]["tables"])
         to_tables = self._keys(self.config["archive_schema"]["tables"])
-        self.archive_tables(d["metaload_user_id"], from_tables, to_tables)
+        self.archive_tables(d["metaload_dataset_id"], from_tables, to_tables)
 
     def archive_tables(self, meta_dataset_id, from_tables, to_tables):
         metaload_id_col = self.get_metaload_id_col(schema="main_schema")

@@ -4,12 +4,7 @@ import os
 import random
 
 
-def run(rabbit_host=None, rabbit_port=None, data=None):
-    if rabbit_host==None:
-        rabbit_host = os.environ['RABBIT_HOST'] if 'RABBIT_HOST' in os.environ else "localhost"
-    if rabbit_port==None:
-        rabbit_port = int(os.environ['RABBIT_PORT']) if 'RABBIT_PORT' in os.environ else 15555
-
+def run(rabbit_host, rabbit_port):
     connection_params = pika.ConnectionParameters(rabbit_host, rabbit_port)
     conn = pika.BlockingConnection(connection_params)
     ch = conn.channel()
@@ -17,29 +12,42 @@ def run(rabbit_host=None, rabbit_port=None, data=None):
     task_id = random.randint(1, 1000000)
     data_folder = r"/var/lib/data_folder"
 
-    file_loc = r"1_year/scenario/production_graph (1).xlsx"
-    data = {
-    "task_id": task_id,
-    "metaload_user_id": 0,
-    "metaload_dataset_id": 3,
-    "file_type": "archive_production_graph",
-    "file_type_name": "Производственный граф",
-    "file_id": -1,
-    "filename": "some_name",
-    "metaload_comment": "Заархивирован файл: фыадлыжадлфркрф",
-    }
-
+    # REPORT
     # data = {
     #     "task_id": task_id,
-    #     "metaload_user_id": 0,
+    #     "file_type": "production_graph_report",
+    #     "metaload_dataset_id": 1,
+    #     "file_id": -1
+    # }
+    # ch.basic_publish(
+    #     exchange="",
+    #     routing_key="task_queue",
+    #     body=json.dumps(data)
+    # )
+    # print(f"[x] Sent message {json.dumps(data)}")
+
+
+    file_loc = r"1_year/scenario/production_graph (1).xlsx"
+    # data = {
+    #     "task_id": task_id,
+    #     "metaload_user_id": 1,
     #     "metaload_dataset_id": 3,
-    #     "file_type": "archive_production_graph",
+    #     "file_type": "archive_business_orgs_spr",
     #     "file_type_name": "Производственный граф",
     #     "file_id": -1,
     #     "filename": "some_name",
     #     "metaload_comment": "Заархивирован файл: фыадлыжадлфркрф",
     # }
-
+    data = {
+        "task_id": task_id,
+        "metaload_user_id": 1,
+        "metaload_dataset_id": 3,
+        "file_type": "archive_production_graph",
+        "file_type_name": "Производственный граф",
+        "file_id": -1,
+        "filename": "some_name",
+        "metaload_comment": "Заархивирован файл: фыадлыжадлфркрф",
+    }
     ch.basic_publish(
         exchange="",
         routing_key="archive_queue",

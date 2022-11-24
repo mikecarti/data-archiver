@@ -56,6 +56,7 @@ class DBCon:
     def copy_table_where(self, from_table, to_table, from_schema, to_schema,
                          columns, _id, archive_id_col, where_col, equals_to):
         with self.conn.cursor() as cur:
+
             cur.execute(
                 f"""
                 INSERT INTO %s ({archive_id_col}, {columns})

@@ -51,7 +51,29 @@ class DBCon:
                  self._sql_name(from_schema, from_table)],
             )
             self.conn.commit()
-        print(f"Table {from_table} of schema {from_schema} copied to Table {to_table} of schema {to_schema}")
+        print(f"Table '{from_table}' of schema '{from_schema}' copied to table '{to_table}' of schema '{to_schema}'")
+
+    def copy_table_where(self, from_table, to_table, from_schema, to_schema,
+                         columns, _id, archive_id_col, where_col, equals_to):
+        with self.conn.cursor() as cur:
+            cur.execute(
+                f"""
+                INSERT INTO %s ({archive_id_col}, {columns})
+                SELECT %s as _, {columns} 
+                FROM %s
+                WHERE %s = %s
+                """,
+                [
+                 self._sql_name(to_schema, to_table),
+                 AsIs(_id),
+                 self._sql_name(from_schema, from_table),
+                 AsIs(where_col), AsIs(equals_to)
+                ]
+            )
+            self.conn.commit()
+        print(f"Table '{from_table}' of schema '{from_schema}' copied to table '{to_table}' of schema '{to_schema}'"
+              f" WHERE '{where_col}' == {equals_to}")
+
 
     def get_column_names(self, table_name, schema_name):
         schema_and_table = self._sql_name(schema_name, table_name)

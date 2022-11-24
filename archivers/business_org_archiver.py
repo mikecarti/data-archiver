@@ -12,6 +12,6 @@ class BusinessOrgArchiver(CommonDataArchiver):
         to_table = list(self.config["archive_schema"]["tables"].keys())[0]
         self.archive_table(from_table, to_table)
 
-    def archive_table(self, from_table, to_table, from_schema=None, to_schema=None):
+    def archive_table(self, from_table, to_table):
         id_archive_name = self.config["archive_schema"]["tables"]["business_orgs_spr"]["columns"][0]
-        self.copy_table(from_schema, from_table, to_schema, to_table, id_archive_name)
+        self.copy_table(from_table, to_table, id_archive_name)

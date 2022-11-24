@@ -35,7 +35,7 @@
     }
   },
 
-  "archive_product_graphs": {
+  "archive_production_graph": {
     "main_schema": {
       "schema_name": "public",
       "tables": {
@@ -56,7 +56,7 @@
             "transport_name"
           ]
         },
-        "production_graph_edges": {
+        "production_graph_nodes": {
           "columns": [
             "metaload_dataset_id",
             "business_org_code",
@@ -111,7 +111,7 @@
             "transport_name"
           ]
         },
-        "production_graph_edges": {
+        "production_graph_nodes": {
           "columns": [
             "archivation_id",
             "metaload_dataset_id",

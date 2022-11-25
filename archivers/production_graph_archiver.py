@@ -45,6 +45,9 @@ class ProductGraphArchiver(CommonDataArchiver):
 
     def delete_production_graph_tables(self):
         delete_tables = self.get_json_table_names("main_schema", without="upload_files")
+        meta_dataset_col = self.get_metaload_id_col("main_schema")
+
+        self.delete_tables(delete_tables, where_cols=[meta_dataset_col], equal_to_values=[self.meta_dataset_id])
 
     def get_archivation_id_col(self):
         id_archive_name_nodes = self.config["archive_schema"]["tables"]["production_graph_nodes"]["req_cols"]["archive_id"]

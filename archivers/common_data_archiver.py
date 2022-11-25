@@ -1,6 +1,7 @@
 import warnings
 import pandas as pd
 from pandas.errors import SettingWithCopyWarning
+from psycopg2._psycopg import AsIs
 
 
 class CommonDataArchiver:
@@ -30,21 +31,16 @@ class CommonDataArchiver:
         if from_schema is None: from_schema = self.in_schemas[self.task_type]["main_schema"]["schema_name"]
         if to_schema is None: to_schema = self.in_schemas[self.task_type]["archive_schema"]["schema_name"]
         from_columns = self._get_intersecting_columns(from_schema, from_table, to_schema, to_table)
-        _id = self.conn.get_max_col_number(to_table, to_schema, id_name)
+        from_schema_table = self._sql_name(from_schema, from_table)
+        to_schema_table = self._sql_name(to_schema, to_table)
+
+        _id = self.conn.get_max_col_number(to_schema_table, id_name)
 
         if equals_to is None:
-            self.conn.copy_table(from_table, to_table, from_schema, to_schema,
-                                 from_columns, _id + 1, id_name)
+            self.conn.copy_table(from_schema_table, to_schema_table, from_columns, _id + 1, id_name)
         else:
-            self.conn.copy_table_where(from_table, to_table, from_schema, to_schema,
+            self.conn.copy_table_where(from_schema_table, to_schema_table,
                                        from_columns, _id + 1, id_name, where_col, equals_to)
-
-    def _get_intersecting_columns(self, from_schema, from_table, to_schema, to_table):
-        from_columns = self.conn.get_column_names(from_table, from_schema)
-        to_columns = self.conn.get_column_names(to_table, to_schema)
-        intersect_cols = list(set(from_columns) & set(to_columns))
-        formatted_cols = ", ".join(intersect_cols)
-        return formatted_cols
 
     def copy_tables(self, from_tables, to_tables, id_archive_name, where_cols, equal_to_values):
         """
@@ -65,11 +61,32 @@ class CommonDataArchiver:
             self.copy_table(from_table, to_table, id_archive_name,
                             where_col=where_col, equals_to=equals_to_)
 
+    def delete_table(self, table, where_col, equal_to, schema=None):
+        if schema is None: schema = self.in_schemas[self.task_type]["main_schema"]["schema_name"]
+        schema_table_name = self._sql_name(schema, table)
+        self.conn.delete_table(schema_table_name, where_col, equal_to)
+
+    def delete_tables(self, tables, where_cols, equal_to_values):
+        equal_to_values, where_cols = self._normalise_filter_values(equal_to_values, where_cols, len(tables))
+
+        for table, where_col, equal_to in zip(tables, where_cols, equal_to_values):
+            self.delete_table(table, where_col, equal_to)
+
+    def _get_intersecting_columns(self, from_schema, from_table, to_schema, to_table):
+        from_columns = self.conn.get_column_names(self._sql_name(from_schema, from_table))
+        to_columns = self.conn.get_column_names(self._sql_name(to_schema, to_table))
+        intersect_cols = list(set(from_columns) & set(to_columns))
+        formatted_cols = ", ".join(intersect_cols)
+        return formatted_cols
+
     def _normalise_filter_values(self, equal_to_values, where_cols, elements_num):
         if len(equal_to_values) == len(where_cols) == 1:
             self._check_for_filter_types(equal_to_values, where_cols)
             equal_to_values = equal_to_values * elements_num
             where_cols = where_cols * elements_num
+        assert len(equal_to_values) == elements_num
+        assert len(where_cols) == elements_num
+
         return equal_to_values, where_cols
 
     def _check_for_filter_types(self, equal_to_values, where_cols):
@@ -84,9 +101,15 @@ class CommonDataArchiver:
 
     def get_json_table_names(self, schema, without=None):
         tables = self.config[schema]["tables"]
-        if without is not None: without_name = tables[without]["table_name"]
-        else: without_name = None
+        if without is not None:
+            without_name = tables[without]["table_name"]
+        else:
+            without_name = None
 
         names = [v["table_name"] for k, v in tables.items() if v["table_name"] != without_name]
         return names
 
+    @staticmethod
+    def _sql_name(schema_name, table_name):
+        schema_and_table = f"{schema_name}.{table_name}"
+        return AsIs(schema_and_table)

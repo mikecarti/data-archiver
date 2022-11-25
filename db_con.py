@@ -38,7 +38,7 @@ class DBCon:
             )
         self.conn.commit()
 
-    def copy_table(self, from_table, to_table, from_schema, to_schema, columns, _id, archive_id_col):
+    def copy_table(self, from_schema_table, to_schema_table, columns, _id, archive_id_col):
         with self.conn.cursor() as cur:
             cur.execute(
                 f"""
@@ -46,15 +46,14 @@ class DBCon:
                 SELECT %s as _, {columns} 
                 FROM %s
                 """,
-                [self._sql_name(to_schema, to_table),
+                [to_schema_table,
                  AsIs(_id),
-                 self._sql_name(from_schema, from_table)],
+                 from_schema_table],
             )
             self.conn.commit()
-        print(f"Table '{from_table}' of schema '{from_schema}' copied to table '{to_table}' of schema '{to_schema}'")
+        print(f"Table '{from_schema_table}' copied to table '{to_schema_table}'")
 
-    def copy_table_where(self, from_table, to_table, from_schema, to_schema,
-                         columns, _id, archive_id_col, where_col, equals_to):
+    def copy_table_where(self, from_schema_table, to_schema_table, columns, _id, archive_id_col, where_col, equals_to):
         with self.conn.cursor() as cur:
 
             cur.execute(
@@ -65,30 +64,40 @@ class DBCon:
                 WHERE %s = %s
                 """,
                 [
-                 self._sql_name(to_schema, to_table),
+                 to_schema_table,
                  AsIs(_id),
-                 self._sql_name(from_schema, from_table),
+                 from_schema_table,
                  AsIs(where_col), AsIs(equals_to)
                 ]
             )
             self.conn.commit()
-        print(f"Table '{from_table}' of schema '{from_schema}' copied to table '{to_table}' of schema '{to_schema}'"
+        print(f"Table '{from_schema_table}' copied to table '{to_schema_table}''"
               f" WHERE '{where_col}' == {equals_to}")
 
+    def delete_table(self, schema_table, where_col, equal_to):
+        return
+        with self.conn.cursor() as cur:
+            cur.execute(
+                f"""    
+                DELETE FROM archive.production_graph_edges
+                WHERE id = 113
+                """
+            )
+            print("...")
+            self.conn.commit()
 
-    def get_column_names(self, table_name, schema_name):
-        schema_and_table = self._sql_name(schema_name, table_name)
+    def get_column_names(self, schema_table_name):
         with self.conn.cursor() as cur:
             cur.execute(
                 """
                 SELECT * FROM %s LIMIT 0
                 """,
-                (schema_and_table,)
+                (schema_table_name,)
             )
             col_names = [desc[0] for desc in cur.description]
             return col_names
 
-    def get_max_col_number(self, table: str, schema: str, col_name: str):
+    def get_max_col_number(self, schema_table: str, col_name: str):
         with self.conn.cursor() as cur:
             col_name = AsIs(col_name)
             cur.execute(
@@ -99,7 +108,7 @@ class DBCon:
                 ORDER BY %s DESC
                 LIMIT 1
                 """,
-                [col_name, self._sql_name(schema, table), col_name, col_name]
+                [col_name, schema_table, col_name, col_name]
             )
             res = cur.fetchone()
             if res is None:
@@ -107,10 +116,6 @@ class DBCon:
             else:
                 return res[0]
 
-    @staticmethod
-    def _sql_name(schema_name, table_name):
-        schema_and_table = f"{schema_name}.{table_name}"
-        return AsIs(schema_and_table)
 
 
 if __name__ == "__main__":

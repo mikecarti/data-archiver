@@ -75,15 +75,14 @@ class DBCon:
               f" WHERE '{where_col}' == {equals_to}")
 
     def delete_table(self, schema_table, where_col, equal_to):
-        return
         with self.conn.cursor() as cur:
             cur.execute(
                 f"""    
-                DELETE FROM archive.production_graph_edges
-                WHERE id = 113
-                """
+                DELETE FROM %(schema_and_table)s
+                WHERE %(column_name)s = %(value)s
+                """,
+                {'schema_and_table': schema_table, 'column_name': AsIs(where_col), 'value': equal_to}
             )
-            print("...")
             self.conn.commit()
 
     def get_column_names(self, schema_table_name):

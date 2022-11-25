@@ -64,7 +64,17 @@ class CommonDataArchiver:
     def delete_table(self, table, where_col, equal_to, schema=None):
         if schema is None: schema = self.in_schemas[self.task_type]["main_schema"]["schema_name"]
         schema_table_name = self._sql_name(schema, table)
-        self.conn.delete_table(schema_table_name, where_col, equal_to)
+        if self.deletion_is_wanted(equal_to, schema_table_name, where_col):
+            self.conn.delete_table(schema_table_name, where_col, equal_to)
+            
+    def deletion_is_wanted(self, equal_to, schema_table_name, where_col):
+        print(f"Are you sure that you want to delete rows of table '{schema_table_name}"
+              f" where '{where_col}' equals to {equal_to} ? \n Y/n'")
+        if input().lower() != 'y':
+            print("Deletion aborted!")
+            return False
+        print("OK. Deleted")
+        return True
 
     def delete_tables(self, tables, where_cols, equal_to_values):
         equal_to_values, where_cols = self._normalise_filter_values(equal_to_values, where_cols, len(tables))

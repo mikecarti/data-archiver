@@ -38,7 +38,7 @@
             "metaload_dataset_id": "metaload_dataset_id"
           }
       },
-      "upload_files": {
+        "upload_files": {
         "table_name": "upload_files",
         "req_cols": {
         "metaload_dataset_id": "id"
@@ -49,28 +49,28 @@
     "archive_schema": {
       "schema_name": "archive",
       "tables": {
-      "production_graph_edges": {
-        "table_name": "production_graph_edges",
-        "req_cols": {
-          "metaload_dataset_id": "metaload_dataset_id",
-          "archive_id": "archivation_id"
-        }
-      },
-      "production_graph_nodes": {
-        "table_name": "production_graph_nodes",
-        "req_cols": {
-          "metaload_dataset_id": "metaload_dataset_id",
-          "archive_id": "archivation_id"
-        }
-      },
-      "upload_files": {
-        "table_name": "upload_files",
-        "req_cols": {
-          "metaload_dataset_id": "id",
-          "archive_id": "archivation_id"
+        "production_graph_edges": {
+          "table_name": "production_graph_edges",
+          "req_cols": {
+            "metaload_dataset_id": "metaload_dataset_id",
+            "archive_id": "archivation_id"
+          }
+        },
+        "production_graph_nodes": {
+          "table_name": "production_graph_nodes",
+          "req_cols": {
+            "metaload_dataset_id": "metaload_dataset_id",
+            "archive_id": "archivation_id"
+          }
+        },
+        "upload_files": {
+          "table_name": "upload_files",
+          "req_cols": {
+            "metaload_dataset_id": "id",
+            "archive_id": "archivation_id"
+          }
         }
       }
-    }
     }
   }
 }

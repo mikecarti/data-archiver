@@ -82,6 +82,11 @@ class CommonDataArchiver:
             raise IndexError(
                 f'{self.copy_tables.__name__}: trying to pass different number of from_tables and to_tables')
 
-    def _keys(self, dict):
-        return list(dict.keys())
+    def get_json_table_names(self, schema, without=None):
+        tables = self.config[schema]["tables"]
+        if without is not None: without_name = tables[without]["table_name"]
+        else: without_name = None
+
+        names = [v["table_name"] for k, v in tables.items() if v["table_name"] != without_name]
+        return names
 

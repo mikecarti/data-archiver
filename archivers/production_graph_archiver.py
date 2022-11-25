@@ -8,21 +8,26 @@ class ProductGraphArchiver(CommonDataArchiver):
 
     def run(self, d):
         print("Product Graph Archiver running")
-        from_tables = self._keys(self.config["main_schema"]["tables"])
-        to_tables = self._keys(self.config["archive_schema"]["tables"])
-        self.archive_tables(d["metaload_dataset_id"], from_tables, to_tables)
+        self.meta_dataset_id = d["metaload_dataset_id"]
+        self.archive_tables()
 
-    def archive_tables(self, meta_dataset_id, from_tables, to_tables):
-        from_tables.remove(self.config["main_schema"]["tables"]["upload_files"]["table_name"])
-        to_tables.remove(self.config["archive_schema"]["tables"]["upload_files"]["table_name"])
+    def archive_tables(self):
+        self.copy_metadata_entry()
+        self.copy_production_graph_tables()
+        self.delete_production_graph_tables()
 
-        self.copy_metadata_entry(meta_dataset_id)
+    def copy_production_graph_tables(self):
+        from_tables = self.get_json_table_names("main_schema", without="upload_files")
+        to_tables = self.get_json_table_names("main_schema", without="upload_files")
 
         metaload_id_col = self.get_metaload_id_col(schema="main_schema")
         id_archive_name = self.get_archivation_id_col()
-        self.copy_tables(from_tables, to_tables, id_archive_name, where_cols=[metaload_id_col], equal_to_values=[meta_dataset_id])
+        self.copy_tables(from_tables, to_tables, id_archive_name, where_cols=[metaload_id_col],
+                         equal_to_values=[self.meta_dataset_id])
 
-    def copy_metadata_entry(self, meta_dataset_id):
+    # TODO: Добавить удаление данных (пункт 3)
+
+    def copy_metadata_entry(self):
         """
         :param meta_dataset_id: ID ряда в upload_files, который будет скопирован в архив
         :return:
@@ -36,7 +41,10 @@ class ProductGraphArchiver(CommonDataArchiver):
         meta_dataset_col = pub_upload["req_cols"]["metaload_dataset_id"]
 
         self.copy_table(from_table, to_table, archive_id_col,
-                   where_col=meta_dataset_col, equals_to=meta_dataset_id)
+                   where_col=meta_dataset_col, equals_to=self.meta_dataset_id)
+
+    def delete_production_graph_tables(self):
+        delete_tables = self.get_json_table_names("main_schema", without="upload_files")
 
     def get_archivation_id_col(self):
         id_archive_name_nodes = self.config["archive_schema"]["tables"]["production_graph_nodes"]["req_cols"]["archive_id"]

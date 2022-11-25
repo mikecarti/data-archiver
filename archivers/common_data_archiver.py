@@ -34,13 +34,13 @@ class CommonDataArchiver:
         from_schema_table = self._sql_name(from_schema, from_table)
         to_schema_table = self._sql_name(to_schema, to_table)
 
-        with self.conn as sql_con:
-            _id = sql_con.get_max_col_number(to_schema_table, id_name)
-            if equals_to is None:
-                sql_con.copy_table(from_schema_table, to_schema_table, from_columns, _id + 1, id_name)
-            else:
-                sql_con.copy_table_where(from_schema_table, to_schema_table,
-                                           from_columns, _id + 1, id_name, where_col, equals_to)
+        _id = self.conn.get_max_col_number(to_schema_table, id_name)
+
+        if equals_to is None:
+            self.conn.copy_table(from_schema_table, to_schema_table, from_columns, _id + 1, id_name)
+        else:
+            self.conn.copy_table_where(from_schema_table, to_schema_table,
+                                       from_columns, _id + 1, id_name, where_col, equals_to)
 
     def copy_tables(self, from_tables, to_tables, id_archive_name, where_cols, equal_to_values):
         """
@@ -65,8 +65,8 @@ class CommonDataArchiver:
         if schema is None: schema = self.in_schemas[self.task_type]["main_schema"]["schema_name"]
         schema_table_name = self._sql_name(schema, table)
         if self.deletion_is_wanted(equal_to, schema_table_name, where_col):
-            with self.conn as sql_con:
-                sql_con.delete_table(schema_table_name, where_col, equal_to)
+            
+            self.conn.delete_table(schema_table_name, where_col, equal_to)
 
     def deletion_is_wanted(self, equal_to, schema_table_name, where_col):
         print(f"Are you sure that you want to delete rows of table '{schema_table_name}"
@@ -84,9 +84,8 @@ class CommonDataArchiver:
             self.delete_table(table, where_col, equal_to)
 
     def _get_intersecting_columns(self, from_schema, from_table, to_schema, to_table):
-        with self.conn as sql_con:
-            from_columns = sql_con.get_column_names(self._sql_name(from_schema, from_table))
-            to_columns = sql_con.get_column_names(self._sql_name(to_schema, to_table))
+        from_columns = self.conn.get_column_names(self._sql_name(from_schema, from_table))
+        to_columns = self.conn.get_column_names(self._sql_name(to_schema, to_table))
         intersect_cols = list(set(from_columns) & set(to_columns))
         formatted_cols = ", ".join(intersect_cols)
         return formatted_cols

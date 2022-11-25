@@ -83,7 +83,6 @@ class DBCon:
                 """,
                 {'schema_and_table': schema_table, 'column_name': AsIs(where_col), 'value': equal_to}
             )
-            self.conn.commit()
 
     def get_column_names(self, schema_table_name):
         with self.conn.cursor() as cur:

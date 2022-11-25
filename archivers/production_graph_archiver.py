@@ -15,6 +15,7 @@ class ProductGraphArchiver(CommonDataArchiver):
         self.copy_metadata_entry()
         self.copy_production_graph_tables()
         self.delete_production_graph_tables()
+        self.delete_metadata_entry()
 
     def copy_production_graph_tables(self):
         from_tables = self.get_json_table_names("main_schema", without="upload_files")
@@ -48,6 +49,12 @@ class ProductGraphArchiver(CommonDataArchiver):
         meta_dataset_col = self.get_metaload_id_col("main_schema")
 
         self.delete_tables(delete_tables, where_cols=[meta_dataset_col], equal_to_values=[self.meta_dataset_id])
+
+    def delete_metadata_entry(self):
+        upload_files_ = self.config["main_schema"]["tables"]["upload_files"]
+        table = upload_files_["table_name"]
+        meta_dataset_col = upload_files_["req_cols"]["metaload_dataset_id"]
+        self.delete_table(table=table, where_col=meta_dataset_col, equal_to=self.meta_dataset_id)
 
     def get_archivation_id_col(self):
         id_archive_name_nodes = self.config["archive_schema"]["tables"]["production_graph_nodes"]["req_cols"]["archive_id"]

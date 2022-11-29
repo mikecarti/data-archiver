@@ -26,8 +26,9 @@ def run(rabbit_host, rabbit_port):
     # )
     # print(f"[x] Sent message {json.dumps(data)}")
 
-
     file_loc = r"1_year/scenario/production_graph (1).xlsx"
+
+
     # data = {
     #     "task_id": task_id,
     #     "metaload_user_id": 1,

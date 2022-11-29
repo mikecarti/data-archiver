@@ -53,11 +53,3 @@ class TestDataArchiver(unittest.TestCase):
         names = c.get_json_table_names("main_schema", without="upload_files")
         self.assertEqual(["production_graph_edges", "production_graph_nodes"], names)
 
-
-    # def test_business_org_archiver_run(self):
-    #
-    #     d = self.get_data("archive_business_orgs_spr")
-    #     producer.run(rabbit_host=self.rabbit_broker, rabbit_port=15555, data=d)
-    # def test_production_graph_archiver_run(self):
-    #     d = self.get_data("archive_production_graph")
-    #     producer.run(rabbit_host=self.rabbit_broker, rabbit_port=15555, data=d)

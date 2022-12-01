@@ -34,7 +34,8 @@ class DataArchiver:
     def run(self, d):
         self.comment = ""
         status, comment = False, "[Upload Error] Неизвестный тип файла!"
-        task_type = d["file_type"]
+
+        task_type = self.get_task_type(d)
         if task_type == "archive_business_orgs_spr":
             orgs_arch = BusinessOrgArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
             status = orgs_arch.run(d)
@@ -48,6 +49,10 @@ class DataArchiver:
         self.stream.seek(0)
         self.stream.truncate(0)
         return status, comment
+
+    def get_task_type(self, d):
+        task_type = f"{d['type']}_{d['file_type']}"
+        return task_type
 
     def config_task_logger(self, logger_name, logger_filename, stream):
         DEFAULT_LOGGING = {

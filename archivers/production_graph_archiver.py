@@ -22,11 +22,8 @@ class ProductGraphArchiver(CommonDataArchiver):
         to_tables = self.get_json_table_names("main_schema", without="upload_files")
 
         metaload_id_col = self.get_metaload_id_col(schema="main_schema")
-        id_archive_name = self.get_archivation_id_col()
-        self.copy_tables(from_tables, to_tables, id_archive_name, where_cols=[metaload_id_col],
+        self.copy_tables(from_tables, to_tables, where_cols=[metaload_id_col],
                          equal_to_values=[self.meta_dataset_id])
-
-    # TODO: Добавить удаление данных (пункт 3)
 
     def copy_metadata_entry(self):
         """
@@ -38,10 +35,9 @@ class ProductGraphArchiver(CommonDataArchiver):
 
         from_table = pub_upload["table_name"]
         to_table = arch_upload["table_name"]
-        archive_id_col = arch_upload["req_cols"]["archive_id"]
         meta_dataset_col = pub_upload["req_cols"]["metaload_dataset_id"]
 
-        self.copy_table(from_table, to_table, archive_id_col,
+        self.copy_table(from_table, to_table,
                    where_col=meta_dataset_col, equals_to=self.meta_dataset_id)
 
     def delete_production_graph_tables(self):
@@ -56,12 +52,6 @@ class ProductGraphArchiver(CommonDataArchiver):
         meta_dataset_col = upload_files_["req_cols"]["metaload_dataset_id"]
         self.delete_table(table=table, where_col=meta_dataset_col, equal_to=self.meta_dataset_id)
 
-    def get_archivation_id_col(self):
-        id_archive_name_nodes = self.config["archive_schema"]["tables"]["production_graph_nodes"]["req_cols"]["archive_id"]
-        id_archive_name_edges = self.config["archive_schema"]["tables"]["production_graph_edges"]["req_cols"]["archive_id"]
-        if id_archive_name_edges != id_archive_name_nodes:
-            raise KeyError("разные наименования id_archive_name в edges и nodes в json")
-        return id_archive_name_nodes
 
     def get_metaload_id_col(self, schema):
         """

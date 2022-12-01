@@ -53,3 +53,9 @@ class TestDataArchiver(unittest.TestCase):
         names = c.get_json_table_names("main_schema", without="upload_files")
         self.assertEqual(["production_graph_edges", "production_graph_nodes"], names)
 
+    def test_get_task_type_concatinates_correctly(self):
+        i = DataArchiver(None, None)
+        dic = {'type': 'archive', 'file_type': 'production_graph'}
+        task_type = i.get_task_type(dic)
+        self.assertEqual('archive_production_graph', task_type)
+

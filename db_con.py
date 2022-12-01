@@ -38,34 +38,32 @@ class DBCon:
             )
         self.conn.commit()
 
-    def copy_table(self, from_schema_table, to_schema_table, columns, _id, archive_id_col):
+    def copy_table(self, from_schema_table, to_schema_table, columns):
         with self.conn.cursor() as cur:
             cur.execute(
                 f"""
-                INSERT INTO %s ({archive_id_col}, {columns})
-                SELECT %s as _, {columns} 
+                INSERT INTO %s ({columns})
+                SELECT {columns} 
                 FROM %s
                 """,
                 [to_schema_table,
-                 AsIs(_id),
                  from_schema_table],
             )
             self.conn.commit()
         print(f"Table '{from_schema_table}' copied to table '{to_schema_table}'")
 
-    def copy_table_where(self, from_schema_table, to_schema_table, columns, _id, archive_id_col, where_col, equals_to):
+    def copy_table_where(self, from_schema_table, to_schema_table, columns, where_col, equals_to):
         with self.conn.cursor() as cur:
 
             cur.execute(
                 f"""
-                INSERT INTO %s ({archive_id_col}, {columns})
-                SELECT %s as _, {columns} 
+                INSERT INTO %s ({columns})
+                SELECT {columns} 
                 FROM %s
                 WHERE %s = %s
                 """,
                 [
                  to_schema_table,
-                 AsIs(_id),
                  from_schema_table,
                  AsIs(where_col), AsIs(equals_to)
                 ]
@@ -94,25 +92,6 @@ class DBCon:
             )
             col_names = [desc[0] for desc in cur.description]
             return col_names
-
-    def get_max_col_number(self, schema_table: str, col_name: str):
-        with self.conn.cursor() as cur:
-            col_name = AsIs(col_name)
-            cur.execute(
-                """
-                SELECT %s 
-                FROM %s
-                WHERE %s IS NOT NULL
-                ORDER BY %s DESC
-                LIMIT 1
-                """,
-                [col_name, schema_table, col_name, col_name]
-            )
-            res = cur.fetchone()
-            if res is None:
-                return 0
-            else:
-                return res[0]
 
 
 

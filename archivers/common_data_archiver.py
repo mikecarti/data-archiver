@@ -12,7 +12,7 @@ class CommonDataArchiver:
         self.task_type = task_type
         self.config = in_schemas[task_type]
 
-    def copy_table(self, from_table, to_table, id_name,
+    def copy_table(self, from_table, to_table,
                    from_schema=None, to_schema=None,
                    where_col=None, equals_to=None):
         """
@@ -20,7 +20,6 @@ class CommonDataArchiver:
 
         :param from_table:
         :param to_table:
-        :param id_name:  archivation id column name
         :param from_schema:
         :param to_schema:
         :param where_col:
@@ -34,15 +33,13 @@ class CommonDataArchiver:
         from_schema_table = self._sql_name(from_schema, from_table)
         to_schema_table = self._sql_name(to_schema, to_table)
 
-        _id = self.conn.get_max_col_number(to_schema_table, id_name)
-
         if equals_to is None:
-            self.conn.copy_table(from_schema_table, to_schema_table, from_columns, _id + 1, id_name)
+            self.conn.copy_table(from_schema_table, to_schema_table, from_columns)
         else:
             self.conn.copy_table_where(from_schema_table, to_schema_table,
-                                       from_columns, _id + 1, id_name, where_col, equals_to)
+                                       from_columns, where_col, equals_to)
 
-    def copy_tables(self, from_tables, to_tables, id_archive_name, where_cols, equal_to_values):
+    def copy_tables(self, from_tables, to_tables, where_cols, equal_to_values):
         """
         Аналог функции copy_table, однако используемый для нескольких таблиц. from_tables, to_tables,
         where_cols, equal_to_values должны быть переданы как list обязательно.
@@ -58,7 +55,7 @@ class CommonDataArchiver:
 
         for from_table, to_table, where_col, equals_to_ \
                 in zip(from_tables, to_tables, where_cols, equal_to_values):
-            self.copy_table(from_table, to_table, id_archive_name,
+            self.copy_table(from_table, to_table,
                             where_col=where_col, equals_to=equals_to_)
 
     def delete_table(self, table, where_col, equal_to, schema=None):

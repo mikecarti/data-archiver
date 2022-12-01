@@ -36,7 +36,7 @@ class DBCon:
                 """,
                 [status_code, status_text, error_description, updated_at, task_id],
             )
-        self.conn.commit()
+        
 
     def copy_table(self, from_schema_table, to_schema_table, columns):
         with self.conn.cursor() as cur:
@@ -49,7 +49,7 @@ class DBCon:
                 [to_schema_table,
                  from_schema_table],
             )
-            self.conn.commit()
+            
         print(f"Table '{from_schema_table}' copied to table '{to_schema_table}'")
 
     def copy_table_where(self, from_schema_table, to_schema_table, columns, where_col, equals_to):
@@ -68,7 +68,7 @@ class DBCon:
                  AsIs(where_col), AsIs(equals_to)
                 ]
             )
-            self.conn.commit()
+            
         print(f"Table '{from_schema_table}' copied to table '{to_schema_table}''"
               f" WHERE '{where_col}' == {equals_to}")
 

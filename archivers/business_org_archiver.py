@@ -8,9 +8,18 @@ class BusinessOrgArchiver(CommonDataArchiver):
 
     def run(self, d):
         print("Business Org Archiver running")
+
+        try:
+            self.archive_tables()
+            self.conn.conn.commit()
+            status = True
+        except Exception:
+            self.logger.error(f"[НЕОБРАБОТАННАЯ ОШИБКА] При загрузке {d['file_type']} возникла неизвестная ошибка!")
+            self.conn.conn.rollback()
+            status = False
+        return status
+
+    def archive_table(self):
         from_table = list(self.config["main_schema"]["tables"].keys())[0]
         to_table = list(self.config["archive_schema"]["tables"].keys())[0]
-        self.archive_table(from_table, to_table)
-
-    def archive_table(self, from_table, to_table):
         self.copy_table(from_table, to_table)

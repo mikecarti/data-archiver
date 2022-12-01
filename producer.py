@@ -28,7 +28,6 @@ def run(rabbit_host, rabbit_port):
 
     file_loc = r"1_year/scenario/production_graph (1).xlsx"
 
-
     # data = {
     #     "task_id": task_id,
     #     "metaload_user_id": 1,
@@ -40,14 +39,9 @@ def run(rabbit_host, rabbit_port):
     #     "metaload_comment": "Заархивирован файл: фыадлыжадлфркрф",
     # }
     data = {
-        "task_id": task_id,
-        "metaload_user_id": 1,
-        "metaload_dataset_id": 3,
-        "file_type": "archive_production_graph",
-        "file_type_name": "Производственный граф",
-        "file_id": -1,
-        "filename": "some_name",
-        "metaload_comment": "Заархивирован файл: фыадлыжадлфркрф",
+        "task_id": 22, "metaload_user_id": 6, "metaload_comment": None, "metaload_dataset_id": 8, "filename": "",
+        "file_id": 1, "type": "archive", "user_id": 6, "file_upload_path": None, "file_type": "production_graph",
+        "data_send": "2022-12-01", "dataset_source_code": "Excel"
     }
     ch.basic_publish(
         exchange="",
@@ -55,8 +49,6 @@ def run(rabbit_host, rabbit_port):
         body=json.dumps(data)
     )
     print(f"[x] Sent message {json.dumps(data)}")
-
-
 
     # file_loc = r"1_year/scenario/План по МЗ.xlsx"
     # data = {
@@ -78,8 +70,6 @@ def run(rabbit_host, rabbit_port):
     # )
     # print(f"[x] Sent message {json.dumps(data)}")
 
-
-
     # file_loc = r"1_year/scenario/invest_event_kkr.xlsx"
     # data = {
     #     "task_id": task_id,
@@ -99,9 +89,6 @@ def run(rabbit_host, rabbit_port):
     # )
     # print(f"[x] Sent message {json.dumps(data)}")
 
-
-
-
     # data = {
     #     "task_id": task_id,
     #     "metaload_dataset_id":{"plan":{"id":30},"graph":{"id":2}},
@@ -116,8 +103,6 @@ def run(rabbit_host, rabbit_port):
     # )
     # print(f"[x] Sent message {json.dumps(data)}")
 
-
-
     # data = {
     #     "task_id": task_id,
     #     "metaload_dataset_id":{"plan":{"id":30},"graph":{"id":2}, "macro": {"id":1}},
@@ -131,9 +116,6 @@ def run(rabbit_host, rabbit_port):
     #     body=json.dumps(data)
     # )
     # print(f"[x] Sent message {json.dumps(data)}")
-
-
-
 
     # file_loc = r"1_year/scenario/failure_schedule.xlsx"
     # data = {
@@ -155,7 +137,6 @@ def run(rabbit_host, rabbit_port):
     # )
     # print(f"[x] Sent message {json.dumps(data)}")
 
-
     # file_loc = r"1_year/scenario/macroeconomic.xlsx"
     # data = {
     #     "task_id": task_id,
@@ -175,7 +156,6 @@ def run(rabbit_host, rabbit_port):
     #     body=json.dumps(data)
     # )
     # print(f"[x] Sent message {json.dumps(data)}")
-
 
     # file_loc = r"1_year/scenario/cost.xlsx"
     # data = {
@@ -197,7 +177,6 @@ def run(rabbit_host, rabbit_port):
     # )
     # print(f"[x] Sent message {json.dumps(data)}")
 
-
     # file_loc = r"Spravochniki/products_spr.xlsx"
     # # file_upload_path = os.path.join(data_folder, file_loc)
     # data = {
@@ -218,7 +197,6 @@ def run(rabbit_host, rabbit_port):
     #     body=json.dumps(data)
     # )
     # print(f"[x] Sent message {json.dumps(data)}")
-
 
     # data_folder_spr= r"C:\PythonProjects\EBITDA-PingCRM\ebitda-data-manager\test_common_data\upload_files\Spravochniki"
     # files = os.listdir(data_folder_spr)
@@ -263,6 +241,5 @@ if __name__ == "__main__":
     db_pass = os.environ['DB_PASS'] if 'DB_PASS' in os.environ else "guest"
     db_host = os.environ['DB_HOST'] if 'DB_HOST' in os.environ else "localhost"
     db_port = int(os.environ['DB_PORT']) if 'DB_PORT' in os.environ else 5482  # для теста на локалке
-
 
     run(rabbit_host=rabbit_broker, rabbit_port=15555)

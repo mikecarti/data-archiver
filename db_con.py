@@ -42,12 +42,11 @@ class DBCon:
         with self.conn.cursor() as cur:
             cur.execute(
                 f"""
-                INSERT INTO %s ({columns})
+                INSERT INTO %(to_schema_table)s ({columns})
                 SELECT {columns} 
-                FROM %s
+                FROM %(from_schema_table)s
                 """,
-                [to_schema_table,
-                 from_schema_table],
+                {'to_schema_table': to_schema_table, 'from_schema_table': from_schema_table}
             )
             
 
@@ -56,16 +55,16 @@ class DBCon:
 
             cur.execute(
                 f"""
-                INSERT INTO %s ({columns})
+                INSERT INTO %(to_schema_table)s ({columns})
                 SELECT {columns} 
-                FROM %s
-                WHERE %s = %s
+                FROM %(from_schema_table)s
+                WHERE %(where_col)s = %(equals_to)s
+                RETURNING %(where_col)s
                 """,
-                [
-                 to_schema_table,
-                 from_schema_table,
-                 AsIs(where_col), AsIs(equals_to)
-                ]
+                {
+                    'to_schema_table': to_schema_table, 'from_schema_table': from_schema_table,
+                    'where_col': AsIs(where_col), 'equals_to': AsIs(equals_to)
+                }
             )
 
     def delete_table(self, schema_table, where_col, equal_to):
@@ -82,9 +81,9 @@ class DBCon:
         with self.conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT * FROM %s LIMIT 0
+                SELECT * FROM %(schema_table_name)s LIMIT 0
                 """,
-                (schema_table_name,)
+                {'schema_table_name': schema_table_name}
             )
             col_names = [desc[0] for desc in cur.description]
             return col_names

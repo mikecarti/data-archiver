@@ -9,9 +9,13 @@ class BusinessOrgArchiver(CommonDataArchiver):
     def run(self, d):
         print("Business Org Archiver running")
 
-        self.common_run(d['file_type'])
+        return self.common_run(d['file_type'])
 
-    def archive_table(self):
+    def archive_tables(self):
+        """
+        Архивирует одну таблицу
+        :return:
+        """
         from_table = list(self.config["main_schema"]["tables"].keys())[0]
         to_table = list(self.config["archive_schema"]["tables"].keys())[0]
         self.copy_table(from_table, to_table)

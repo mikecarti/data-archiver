@@ -11,15 +11,14 @@ class ProductGraphArchiver(CommonDataArchiver):
         print("Product Graph Archiver running")
         self.meta_dataset_id = d["metaload_dataset_id"]
 
-        self.common_run(task_type=d['file_type'])
+        return self.common_run(task_type=d['file_type'])
 
     def archive_tables(self):
         self.copy_metadata_entry()
         self.copy_production_graph_tables()
         # self.delete_production_graph_tables()
         # self.delete_metadata_entry()
-        #
-        #
+
 
     def copy_production_graph_tables(self):
         from_tables = self.get_json_table_names("main_schema", without="upload_files")

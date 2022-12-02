@@ -16,7 +16,7 @@ class CommonDataArchiver:
             status = True
         except Exception as e:
             self.logger.error(f"[НЕОБРАБОТАННАЯ ОШИБКА] При архивации {task_type} возникла неизвестная ошибка:\n"
-                              f"Откат изменений.\n{e}!")
+                              f"{e}!\n\n Откат изменений")
             self.conn.conn.rollback()
             status = False
         return status

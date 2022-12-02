@@ -1,3 +1,5 @@
+from typing import overload
+
 from .common_data_archiver import CommonDataArchiver
 
 
@@ -5,21 +7,13 @@ class ProductGraphArchiver(CommonDataArchiver):
 
     def __init__(self, conn, in_schemas, logger, task_type):
         super().__init__(conn, in_schemas, logger, task_type)
+        self.meta_dataset_id = None
 
-    def run(self, d):
+    def run(self, d: dict):
         print("Product Graph Archiver running")
         self.meta_dataset_id = d["metaload_dataset_id"]
 
-        try:
-            self.archive_tables()
-            self.conn.conn.commit()
-            status = True
-        except Exception as e:
-            self.logger.error(f"[НЕОБРАБОТАННАЯ ОШИБКА] При загрузке {d['file_type']} возникла неизвестная ошибка:\n"
-                              f"Откат изменений.\n{e}!")
-            self.conn.conn.rollback()
-            status = False
-        return status
+        self.common_run(task_type=d['file_type'])
 
     def archive_tables(self):
         self.copy_metadata_entry()

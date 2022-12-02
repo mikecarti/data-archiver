@@ -1,4 +1,6 @@
 import warnings
+from abc import abstractmethod
+
 import pandas as pd
 from pandas.errors import SettingWithCopyWarning
 from psycopg2._psycopg import AsIs
@@ -11,6 +13,21 @@ class CommonDataArchiver:
         self.logger = logger  # unused
         self.task_type = task_type
         self.config = in_schemas[task_type]
+
+    def common_run(self, task_type: str):
+        try:
+            self.archive_tables()
+            self.conn.conn.commit()
+            status = True
+        except Exception as e:
+            self.logger.error(f"[НЕОБРАБОТАННАЯ ОШИБКА] При архивации {task_type} возникла неизвестная ошибка:\n"
+                              f"Откат изменений.\n{e}!")
+            self.conn.conn.rollback()
+            status = False
+        return status
+
+    def archive_tables(self):
+        raise NotImplementedError("Must override archive_tables")
 
     def copy_table(self, from_table, to_table,
                    from_schema=None, to_schema=None,

@@ -1,8 +1,3 @@
-import warnings
-from abc import abstractmethod
-
-import pandas as pd
-from pandas.errors import SettingWithCopyWarning
 from psycopg2._psycopg import AsIs
 
 

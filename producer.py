@@ -40,7 +40,7 @@ def run(rabbit_host, rabbit_port):
     # }
     data = {
         "task_id": 22, "metaload_user_id": 6, "metaload_comment": None, "metaload_dataset_id": 3, "filename": "",
-        "file_id": 1, "type": "archive", "user_id": 6, "file_upload_path": None, "file_type": "production_graph",
+        "file_id": 1, "type": "archive", "user_id": 6, "file_upload_path": None, "file_type": "business_orgs_spr",
         "data_send": "2022-12-01", "dataset_source_code": "Excel"
     }
     ch.basic_publish(

@@ -1,5 +1,3 @@
-from typing import overload
-
 from .common_data_archiver import CommonDataArchiver
 
 
@@ -18,8 +16,8 @@ class ProductGraphArchiver(CommonDataArchiver):
     def archive_tables(self):
         self.copy_metadata_entry()
         self.copy_production_graph_tables()
-        self.delete_production_graph_tables()
-        self.delete_metadata_entry()
+        # self.delete_production_graph_tables()
+        # self.delete_metadata_entry()
 
     def copy_production_graph_tables(self):
         from_tables = self.get_json_table_names("main_schema", without="upload_files")
@@ -31,7 +29,6 @@ class ProductGraphArchiver(CommonDataArchiver):
 
     def copy_metadata_entry(self):
         """
-        :param meta_dataset_id: ID ряда в upload_files, который будет скопирован в архив
         :return:
         """
         pub_upload = self.config["main_schema"]["tables"]["upload_files"]
@@ -42,7 +39,7 @@ class ProductGraphArchiver(CommonDataArchiver):
         meta_dataset_col = pub_upload["req_cols"]["metaload_dataset_id"]
 
         self.copy_table(from_table, to_table,
-                   where_col=meta_dataset_col, equals_to=self.meta_dataset_id)
+                        where_col=meta_dataset_col, equals_to=self.meta_dataset_id)
 
     def delete_production_graph_tables(self):
         delete_tables = self.get_json_table_names("main_schema", without="upload_files")
@@ -56,19 +53,23 @@ class ProductGraphArchiver(CommonDataArchiver):
         meta_dataset_col = upload_files_["req_cols"]["metaload_dataset_id"]
         self.delete_table(table=table, where_col=meta_dataset_col, equal_to=self.meta_dataset_id)
 
-
     def get_metaload_id_col(self, schema):
         """
         :param schema:
         :return: metaload_id_col
         """
-        edges_metaload_id_col = self.in_schemas["archive_production_graph"][schema]["tables"]["production_graph_edges"]["req_cols"]["metaload_dataset_id"]
-        nodes_metaload_id_col = self.in_schemas["archive_production_graph"][schema]["tables"]["production_graph_edges"]["req_cols"]["metaload_dataset_id"]
+        edges_metaload_id_col = \
+            self.in_schemas["archive_production_graph"][schema]["tables"]["production_graph_edges"]["req_cols"][
+                "metaload_dataset_id"]
+        nodes_metaload_id_col = \
+            self.in_schemas["archive_production_graph"][schema]["tables"]["production_graph_edges"]["req_cols"][
+                "metaload_dataset_id"]
 
         if edges_metaload_id_col != nodes_metaload_id_col:
-            raise KeyError('В файле json table_data_schemas.json, ["archive_production_graph"]["main_schema"]["tables"]["production_graph_edges"]["columns"] ,'
-                           'В файле json table_data_schemas.json, ["archive_production_graph"]["main_schema"]["tables"]["production_graph_nodes"]["columns"], '
-                           'первым элементом должен стоять одинаковый string отображающий "metaload_dataset_id"')
-
+            raise KeyError(
+                'В файле json table_data_schemas.json, '
+                '["archive_production_graph"]["main_schema"]["tables"]["production_graph_edges"]["columns"] ,'
+                'В файле json table_data_schemas.json,'
+                '["archive_production_graph"]["main_schema"]["tables"]["production_graph_nodes"]["columns"], '
+                'первым элементом должен стоять одинаковый string отображающий "metaload_dataset_id"')
         return edges_metaload_id_col
-

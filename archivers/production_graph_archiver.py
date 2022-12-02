@@ -18,6 +18,8 @@ class ProductGraphArchiver(CommonDataArchiver):
         self.copy_production_graph_tables()
         # self.delete_production_graph_tables()
         # self.delete_metadata_entry()
+        #
+        #
 
     def copy_production_graph_tables(self):
         from_tables = self.get_json_table_names("main_schema", without="upload_files")

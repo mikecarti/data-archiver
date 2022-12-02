@@ -62,21 +62,21 @@ services:
     depends_on:
       - ebitda_db
 
-#  data-manager:
-#    container_name: ebitda_data_manager
-#    build: ./../ebitda-data-manager
-##    image: ebitda-data-manager-img
-#    restart: unless-stopped
-#    environment:
-#      <<: *dbenv
-#      <<: *rabenv
-#      PYTHONUNBUFFERED: 1
-#    volumes:
-#      - ./upload_files:/var/lib/data_folder
-#      - ./web/upload_files:/var/lib/data_destination
-#      - ./../ebitda-data-manager:/var/lib
-#    depends_on:
-#      - ebitda_db
+  data-manager:
+    container_name: ebitda_data_manager
+    build: ./../ebitda-data-manager
+#    image: ebitda-data-manager-img
+    restart: unless-stopped
+    environment:
+      <<: *dbenv
+      <<: *rabenv
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ./upload_files:/var/lib/data_folder
+      - ./web/upload_files:/var/lib/data_destination
+      - ./../ebitda-data-manager:/var/lib
+    depends_on:
+      - ebitda_db
 
 #  anylogic-api:
 #    container_name: ebitda_anylogic_api

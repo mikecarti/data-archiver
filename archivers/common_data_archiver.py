@@ -35,9 +35,13 @@ class CommonDataArchiver:
 
         if equals_to is None:
             self.conn.copy_table(from_schema_table, to_schema_table, from_columns)
+            print(f"Table '{from_schema_table}' copied to table '{to_schema_table}'")
+
         else:
             self.conn.copy_table_where(from_schema_table, to_schema_table,
                                        from_columns, where_col, equals_to)
+            print(f"Table '{from_schema_table}' copied to table '{to_schema_table}''"
+                  f" WHERE '{where_col}' == {equals_to}")
 
     def copy_tables(self, from_tables, to_tables, where_cols, equal_to_values):
         """
@@ -63,6 +67,7 @@ class CommonDataArchiver:
         schema_table_name = self._sql_name(schema, table)
 
         self.conn.delete_table(schema_table_name, where_col, equal_to)
+        print(f"Rows of Table '{schema_table_name} WHERE '{where_col}' == {equal_to} are DELETED")
 
     def delete_tables(self, tables, where_cols, equal_to_values):
         equal_to_values, where_cols = self._normalise_filter_values(equal_to_values, where_cols, len(tables))

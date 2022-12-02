@@ -50,7 +50,6 @@ class DBCon:
                  from_schema_table],
             )
             
-        print(f"Table '{from_schema_table}' copied to table '{to_schema_table}'")
 
     def copy_table_where(self, from_schema_table, to_schema_table, columns, where_col, equals_to):
         with self.conn.cursor() as cur:
@@ -68,9 +67,6 @@ class DBCon:
                  AsIs(where_col), AsIs(equals_to)
                 ]
             )
-            
-        print(f"Table '{from_schema_table}' copied to table '{to_schema_table}''"
-              f" WHERE '{where_col}' == {equals_to}")
 
     def delete_table(self, schema_table, where_col, equal_to):
         with self.conn.cursor() as cur:

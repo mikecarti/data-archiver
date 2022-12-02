@@ -14,8 +14,8 @@ class ProductGraphArchiver(CommonDataArchiver):
             self.archive_tables()
             self.conn.conn.commit()
             status = True
-        except Exception:
-            self.logger.error(f"[НЕОБРАБОТАННАЯ ОШИБКА] При загрузке {d['file_type']} возникла неизвестная ошибка!")
+        except Exception as e:
+            self.logger.error(f"[НЕОБРАБОТАННАЯ ОШИБКА] При загрузке {d['file_type']} возникла неизвестная ошибка:\n{e}!")
             self.conn.conn.rollback()
             status = False
         return status
@@ -23,8 +23,8 @@ class ProductGraphArchiver(CommonDataArchiver):
     def archive_tables(self):
         self.copy_metadata_entry()
         self.copy_production_graph_tables()
-        # self.delete_production_graph_tables()
-        # self.delete_metadata_entry()
+        self.delete_production_graph_tables()
+        self.delete_metadata_entry()
 
     def copy_production_graph_tables(self):
         from_tables = self.get_json_table_names("main_schema", without="upload_files")

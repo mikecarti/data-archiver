@@ -1,0 +1,3 @@
+2022-12-02 11:48:01 ERROR: [НЕОБРАБОТАННАЯ ОШИБКА] При загрузке production_graph возникла неизвестная ошибка duplicate key value violates unique constraint "upload_files_pkey"
+DETAIL:  Key (id)=(3) already exists.
+!

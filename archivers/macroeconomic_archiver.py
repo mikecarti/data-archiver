@@ -30,4 +30,12 @@ class MacroeconomicsArchiver(CommonDataArchiver):
                          equal_to_values=[self.meta_dataset_id])
 
     def delete_macroeconomics_tables(self):
-        pass
+        tables_db_names = self._get_db_table_names("main_schema")
+        tables_json_names = self._get_json_table_names("main_schema")
+
+        metaload_id_cols = self._get_required_columns_names_for_bd(json_column_name="metaload_dataset_id",
+                                                                   schema="main_schema",
+                                                                   tables_json_names=tables_json_names)
+
+        self.delete_tables(tables_db_names, where_cols=metaload_id_cols, equal_to_values=[self.meta_dataset_id])
+

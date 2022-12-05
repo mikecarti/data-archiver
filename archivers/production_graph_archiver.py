@@ -47,8 +47,8 @@ class ProductGraphArchiver(CommonDataArchiver):
                         where_col=meta_dataset_col, equals_to=self.meta_dataset_id)
 
     def delete_production_graph_tables(self):
-        tables_db_names = self._get_json_table_names("main_schema", without="upload_files")
-        tables_json_names = self._get_db_table_names("main_schema", without="upload_files")
+        tables_db_names = self._get_db_table_names("main_schema", without="upload_files")
+        tables_json_names = self._get_json_table_names("main_schema", without="upload_files")
 
         metaload_id_cols = self._get_required_columns_names_for_bd(json_column_name="metaload_dataset_id",
                                                                    schema="main_schema",

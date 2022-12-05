@@ -48,7 +48,7 @@ class DBCon:
                 """,
                 {'to_schema_table': to_schema_table, 'from_schema_table': from_schema_table}
             )
-            some_data = cur.fetchall()
+            # some_data = cur.fetchall()
             return 1
 
     def copy_table_where(self, from_schema_table, to_schema_table, columns, where_col, equals_to):
@@ -66,7 +66,7 @@ class DBCon:
                     'where_col': AsIs(where_col), 'equals_to': AsIs(equals_to)
                 }
             )
-            where_col_data = cur.fetchall()
+            # where_col_data = cur.fetchall()
             return 1
 
     def delete_table_where(self, schema_table, where_col, equal_to):
@@ -79,7 +79,7 @@ class DBCon:
                 """,
                 {'schema_and_table': schema_table, 'column_name': AsIs(where_col), 'value': equal_to}
             )
-            where_col_data = cur.fetchall()
+            # where_col_data = cur.fetchall()
             return 1
 
     def get_column_names(self, schema_table_name):

@@ -44,7 +44,7 @@ class DataArchiver:
             case "archive_production_graph":
                 prod_arch = ProductGraphArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
                 status = prod_arch.run(d)
-            case "archive_macroeconomic":
+            case "archive_macroeconomics":
                 macro_econ_arch = MacroeconomicsArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
                 status = macro_econ_arch.run(d)
             case _:

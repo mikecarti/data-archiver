@@ -50,11 +50,10 @@ class DataArchiver:
             case _:
                 print(f"Unregistered task_type: {task_type}")
 
-        return status
-        # comment = self.stream.getvalue()
-        # self.stream.seek(0)
-        # self.stream.truncate(0)
-        # return status, comment
+        comment = self.stream.getvalue()
+        self.stream.seek(0)
+        self.stream.truncate(0)
+        return status, comment
 
     def get_task_type(self, d):
         task_type = f"{d['type']}_{d['file_type']}"

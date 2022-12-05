@@ -15,7 +15,7 @@ TASK_TOPIC = "archive_queue"
 SOCKET_TOPIC = "Setting"
 
 
-class DataManager:
+class DataArchiverMain:
 
     def __init__(self, db_name, db_user, db_pass, db_host, db_port, rabbit_broker, rabbit_port):
         connection_params = pika.ConnectionParameters(host=rabbit_broker, port=rabbit_port)
@@ -111,8 +111,8 @@ def main():
 
     while True:
         try:
-            print("Creating DataManager listener instance")
-            cnsr = DataManager(db_name, db_user, db_pass, db_host, db_port, rabbit_broker, rabbit_port)
+            print("Creating DataArchiver listener instance")
+            cnsr = DataArchiverMain(db_name, db_user, db_pass, db_host, db_port, rabbit_broker, rabbit_port)
             cnsr.run()
         except (AMQPConnectionError) as e:
             print("Waiting for rabbit")

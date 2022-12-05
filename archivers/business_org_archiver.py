@@ -7,7 +7,7 @@ class BusinessOrgArchiver(CommonDataArchiver):
         super().__init__(conn, in_schemas, logger, task_type)
 
     def run(self, d):
-        print("Business Org Archiver running")
+        self.logger.info("Business Org Archiver running")
 
         return self.common_run(d['file_type'])
 

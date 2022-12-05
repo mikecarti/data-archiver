@@ -81,7 +81,7 @@ class CommonDataArchiver:
         self.conn.delete_table(schema_table_name, where_col, equal_to)
         print(f"Rows of Table '{schema_table_name} WHERE '{where_col}' == {equal_to} are DELETED")
 
-    def delete_tables(self, tables, where_cols, equal_to_values):
+    def delete_tables(self, tables: list[str], where_cols: list[str], equal_to_values: list[object]):
         equal_to_values, where_cols = self._normalise_filter_values(equal_to_values, where_cols, len(tables))
 
         for table, where_col, equal_to in zip(tables, where_cols, equal_to_values):

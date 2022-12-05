@@ -16,15 +16,17 @@ class ProductGraphArchiver(CommonDataArchiver):
     def archive_tables(self):
         self.copy_metadata_entry()
         self.copy_production_graph_tables()
-        # self.delete_production_graph_tables()
-        # self.delete_metadata_entry()
+        self.delete_production_graph_tables()
+        self.delete_metadata_entry()
 
 
     def copy_production_graph_tables(self):
         from_tables = self.get_json_table_names("main_schema", without="upload_files")
         to_tables = self.get_json_table_names("main_schema", without="upload_files")
 
-        metaload_id_col = self.get_metaload_id_col(schema="main_schema")
+        metaload_id_col = self.get_required_column_name_for_bd("main_schema",
+                                                                table_name="production_graph_edges",
+                                                                json_column_name="metaload_dataset_id")
         self.copy_tables(from_tables, to_tables, where_cols=[metaload_id_col],
                          equal_to_values=[self.meta_dataset_id])
 
@@ -44,9 +46,11 @@ class ProductGraphArchiver(CommonDataArchiver):
 
     def delete_production_graph_tables(self):
         delete_tables = self.get_json_table_names("main_schema", without="upload_files")
-        meta_dataset_col = self.get_metaload_id_col("main_schema")
+        metaload_id_col = self.get_required_column_name_for_bd("main_schema",
+                                                                table_name="production_graph_edges",
+                                                                json_column_name="metaload_dataset_id")
 
-        self.delete_tables(delete_tables, where_cols=[meta_dataset_col], equal_to_values=[self.meta_dataset_id])
+        self.delete_tables(delete_tables, where_cols=[metaload_id_col], equal_to_values=[self.meta_dataset_id])
 
     def delete_metadata_entry(self):
         upload_files_ = self.config["main_schema"]["tables"]["upload_files"]
@@ -54,23 +58,14 @@ class ProductGraphArchiver(CommonDataArchiver):
         meta_dataset_col = upload_files_["req_cols"]["metaload_dataset_id"]
         self.delete_table(table=table, where_col=meta_dataset_col, equal_to=self.meta_dataset_id)
 
-    def get_metaload_id_col(self, schema):
+    def get_required_column_name_for_bd(self, schema, table_name, json_column_name):
         """
+        Возвращает имя колонки в бд, ориентируясь на данные в JSON
         :param schema:
+        :param table_name:
+        :param json_column_name:
         :return: metaload_id_col
         """
-        edges_metaload_id_col = \
-            self.in_schemas["archive_production_graph"][schema]["tables"]["production_graph_edges"]["req_cols"][
-                "metaload_dataset_id"]
-        nodes_metaload_id_col = \
-            self.in_schemas["archive_production_graph"][schema]["tables"]["production_graph_edges"]["req_cols"][
-                "metaload_dataset_id"]
+        return self.in_schemas[self.task_type][schema]["tables"][table_name]["req_cols"][json_column_name]
 
-        if edges_metaload_id_col != nodes_metaload_id_col:
-            raise KeyError(
-                'В файле json table_data_schemas.json, '
-                '["archive_production_graph"]["main_schema"]["tables"]["production_graph_edges"]["columns"] ,'
-                'В файле json table_data_schemas.json,'
-                '["archive_production_graph"]["main_schema"]["tables"]["production_graph_nodes"]["columns"], '
-                'первым элементом должен стоять одинаковый string отображающий "metaload_dataset_id"')
-        return edges_metaload_id_col
+

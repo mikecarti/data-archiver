@@ -107,6 +107,23 @@ class CommonDataArchiver:
         """
         return self.in_schemas[self.task_type][schema]["tables"][table_name]["req_cols"][json_column_name]
 
+    def _get_required_columns_names_for_bd(self, schema: str,
+                                           tables_json_names: list[str],
+                                           json_column_name: str) -> list[str]:
+        """
+        Возвращает имя колонки из БД, для каждой таблицы *tables_json_names*
+        :param schema:
+        :param tables_json_names:
+        :param json_column_name:
+        :return:
+        """
+        metaload_id_cols = []
+        for table_name in tables_json_names:
+            metaload_id_cols.append(self._get_required_column_name_for_bd(schema,
+                                                                          table_name=table_name,
+                                                                          json_column_name=json_column_name))
+        return metaload_id_cols
+
     def _normalise_filter_values(self, equal_to_values, columns_names, elements_num):
         if len(equal_to_values) == len(columns_names) == 1:
             self._check_for_filter_types(equal_to_values, columns_names)

@@ -56,23 +56,6 @@ class ProductGraphArchiver(CommonDataArchiver):
 
         self.delete_tables(tables_db_names, where_cols=metaload_id_cols, equal_to_values=[self.meta_dataset_id])
 
-    def _get_required_columns_names_for_bd(self, schema: str,
-                                           tables_json_names: list[str],
-                                           json_column_name: str) -> list[str]:
-        """
-        Возвращает имя колонки из БД, для каждой таблицы *tables_json_names*
-        :param schema:
-        :param tables_json_names:
-        :param json_column_name:
-        :return:
-        """
-        metaload_id_cols = []
-        for table_name in tables_json_names:
-            metaload_id_cols.append(self._get_required_column_name_for_bd(schema,
-                                                                          table_name=table_name,
-                                                                          json_column_name=json_column_name))
-        return metaload_id_cols
-
     def delete_metadata_entry(self):
         upload_files_ = self.config["main_schema"]["tables"]["upload_files"]
         table = upload_files_["table_name"]

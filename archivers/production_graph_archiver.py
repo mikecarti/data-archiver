@@ -19,15 +19,17 @@ class ProductGraphArchiver(CommonDataArchiver):
         self.delete_production_graph_tables()
         self.delete_metadata_entry()
 
-
     def copy_production_graph_tables(self):
-        from_tables = self.get_json_table_names("main_schema", without="upload_files")
-        to_tables = self.get_json_table_names("main_schema", without="upload_files")
+        from_tables = self._get_json_table_names("main_schema", without="upload_files")
+        to_tables = self._get_json_table_names("main_schema", without="upload_files")
 
-        metaload_id_col = self.get_required_column_name_for_bd("main_schema",
-                                                                table_name="production_graph_edges",
-                                                                json_column_name="metaload_dataset_id")
-        self.copy_tables(from_tables, to_tables, where_cols=[metaload_id_col],
+        from_tables_json_names = self._get_json_table_names(schema="main_schema", without="upload_files")
+
+        metaload_id_cols = self._get_required_columns_names_for_bd(json_column_name="metaload_dataset_id",
+                                                                   schema="main_schema",
+                                                                   tables_json_names=from_tables_json_names)
+
+        self.copy_tables(from_tables, to_tables, where_cols=metaload_id_cols,
                          equal_to_values=[self.meta_dataset_id])
 
     def copy_metadata_entry(self):
@@ -45,27 +47,34 @@ class ProductGraphArchiver(CommonDataArchiver):
                         where_col=meta_dataset_col, equals_to=self.meta_dataset_id)
 
     def delete_production_graph_tables(self):
-        delete_tables = self.get_json_table_names("main_schema", without="upload_files")
-        metaload_id_col = self.get_required_column_name_for_bd("main_schema",
-                                                                table_name="production_graph_edges",
-                                                                json_column_name="metaload_dataset_id")
+        tables_db_names = self._get_json_table_names("main_schema", without="upload_files")
+        tables_json_names = self._get_db_table_names("main_schema", without="upload_files")
 
-        self.delete_tables(delete_tables, where_cols=[metaload_id_col], equal_to_values=[self.meta_dataset_id])
+        metaload_id_cols = self._get_required_columns_names_for_bd(json_column_name="metaload_dataset_id",
+                                                                   schema="main_schema",
+                                                                   tables_json_names=tables_json_names)
+
+        self.delete_tables(tables_db_names, where_cols=metaload_id_cols, equal_to_values=[self.meta_dataset_id])
+
+    def _get_required_columns_names_for_bd(self, schema: str,
+                                           tables_json_names: list[str],
+                                           json_column_name: str) -> list[str]:
+        """
+        Возвращает имя колонки из БД, для каждой таблицы *tables_json_names*
+        :param schema:
+        :param tables_json_names:
+        :param json_column_name:
+        :return:
+        """
+        metaload_id_cols = []
+        for table_name in tables_json_names:
+            metaload_id_cols.append(self._get_required_column_name_for_bd(schema,
+                                                                          table_name=table_name,
+                                                                          json_column_name=json_column_name))
+        return metaload_id_cols
 
     def delete_metadata_entry(self):
         upload_files_ = self.config["main_schema"]["tables"]["upload_files"]
         table = upload_files_["table_name"]
         meta_dataset_col = upload_files_["req_cols"]["metaload_dataset_id"]
         self.delete_table(table=table, where_col=meta_dataset_col, equal_to=self.meta_dataset_id)
-
-    def get_required_column_name_for_bd(self, schema, table_name, json_column_name):
-        """
-        Возвращает имя колонки в бд, ориентируясь на данные в JSON
-        :param schema:
-        :param table_name:
-        :param json_column_name:
-        :return: metaload_id_col
-        """
-        return self.in_schemas[self.task_type][schema]["tables"][table_name]["req_cols"][json_column_name]
-
-

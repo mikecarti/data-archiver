@@ -44,13 +44,13 @@ class TestDataArchiver(unittest.TestCase):
     def test_get_json_table_names_return_table_names(self):
         d = self.get_json_data()
         c = CommonDataArchiver(None, in_schemas=d, logger=None, task_type="archive_production_graph")
-        names = c.get_json_table_names("main_schema")
+        names = c._get_json_table_names("main_schema")
         self.assertEqual(["production_graph_edges", "production_graph_nodes", "upload_files"], names)
 
     def test_get_json_table_names_return_table_names_without_some_name(self):
         d = self.get_json_data()
         c = CommonDataArchiver(None, in_schemas=d, logger=None, task_type="archive_production_graph")
-        names = c.get_json_table_names("main_schema", without="upload_files")
+        names = c._get_json_table_names("main_schema", without="upload_files")
         self.assertEqual(["production_graph_edges", "production_graph_nodes"], names)
 
     def test_get_task_type_concatinates_correctly(self):

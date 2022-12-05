@@ -1,4 +1,5 @@
 from psycopg2._psycopg import AsIs
+import traceback
 
 
 class CommonDataArchiver:
@@ -17,6 +18,8 @@ class CommonDataArchiver:
         except Exception as e:
             self.logger.error(f"[НЕОБРАБОТАННАЯ ОШИБКА] При архивации {task_type} возникла неизвестная ошибка:\n"
                               f"{e}!\n\n Откат изменений")
+            traceback.print_exc()
+            traceback.format_exc()
             self.conn.conn.rollback()
             status = False
         return status
@@ -94,15 +97,27 @@ class CommonDataArchiver:
         formatted_cols = ", ".join(intersect_cols)
         return formatted_cols
 
-    def _normalise_filter_values(self, equal_to_values, where_cols, elements_num):
-        if len(equal_to_values) == len(where_cols) == 1:
-            self._check_for_filter_types(equal_to_values, where_cols)
-            equal_to_values = equal_to_values * elements_num
-            where_cols = where_cols * elements_num
-        assert len(equal_to_values) == elements_num
-        assert len(where_cols) == elements_num
+    def _get_required_column_name_for_bd(self, schema, table_name, json_column_name):
+        """
+        Возвращает имя колонки в бд, ориентируясь на данные в JSON
+        :param schema:
+        :param table_name: json имя таблицы (не то, которое указано в БД)
+        :param json_column_name:
+        :return: metaload_id_col
+        """
+        return self.in_schemas[self.task_type][schema]["tables"][table_name]["req_cols"][json_column_name]
 
-        return equal_to_values, where_cols
+    def _normalise_filter_values(self, equal_to_values, columns_names, elements_num):
+        if len(equal_to_values) == len(columns_names) == 1:
+            self._check_for_filter_types(equal_to_values, columns_names)
+            equal_to_values = equal_to_values * elements_num
+            columns_names = columns_names * elements_num
+        elif len(columns_names) > 1 and len(equal_to_values) == 1:
+            equal_to_values = equal_to_values * len(columns_names)
+        assert len(equal_to_values) == elements_num
+        assert len(columns_names) == elements_num
+
+        return equal_to_values, columns_names
 
     def _check_for_filter_types(self, equal_to_values, where_cols):
         if type(equal_to_values) != list != type(where_cols):
@@ -114,7 +129,14 @@ class CommonDataArchiver:
             raise IndexError(
                 f'{self.copy_tables.__name__}: trying to pass different number of from_tables and to_tables')
 
-    def get_json_table_names(self, schema, without=None):
+    def _get_db_table_names(self, schema, without=None):
+        """
+        Возвращает имена колонок в таблице, так как они предположительно отображены в базе данных. Информация
+        берется из JSON типа read-only.
+        :param schema:
+        :param without: json имя таблицы
+        :return:
+        """
         tables = self.config[schema]["tables"]
         if without is not None:
             without_name = tables[without]["table_name"]
@@ -122,6 +144,18 @@ class CommonDataArchiver:
             without_name = None
 
         names = [v["table_name"] for k, v in tables.items() if v["table_name"] != without_name]
+        return names
+
+    def _get_json_table_names(self, schema, without=None):
+        """
+        Возвращает JSON имена колонок в таблице. Эти имена не обязаны соответствовать именам колонок в бд.
+        Информация берется из JSON файла типа read-only.
+        :param schema:
+        :param without: json имя таблицы
+        :return:
+        """
+        tables = self.config[schema]["tables"]
+        names = [k for k, v in tables.items() if k != without]
         return names
 
     @staticmethod

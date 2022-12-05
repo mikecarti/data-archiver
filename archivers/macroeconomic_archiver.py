@@ -14,7 +14,7 @@ class MacroeconomicsArchiver(CommonDataArchiver):
 
     def archive_tables(self):
         self.copy_macroeconomics_tables()
-        # self.delete_macroeconomics_tables()
+        self.delete_macroeconomics_tables()
 
     def copy_macroeconomics_tables(self):
         from_tables = self._get_db_table_names("main_schema")

@@ -8,7 +8,7 @@ class ProductGraphArchiver(CommonDataArchiver):
         self.meta_dataset_id = None
 
     def run(self, d: dict):
-        print("Product Graph Archiver running")
+        self.logger.info("Product Graph Archiver running")
         self.meta_dataset_id = d["metaload_dataset_id"]
 
         return self.common_run(task_type=d['file_type'])

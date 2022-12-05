@@ -7,7 +7,7 @@ class MacroeconomicsArchiver(CommonDataArchiver):
         self.meta_dataset_id = None
 
     def run(self, d: dict):
-        print("Macroeconomics Archiver running")
+        self.logger.info("Macroeconomics Archiver running")
         self.meta_dataset_id = d["metaload_dataset_id"]
 
         return self.common_run(task_type=d['file_type'])

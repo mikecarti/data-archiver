@@ -92,6 +92,30 @@ class CommonDataArchiver:
         for table, where_col, equal_to in zip(tables, where_cols, equal_to_values):
             self.delete_table(table, where_col, equal_to)
 
+    def copy_metadata_entry(self):
+        """
+        :return:
+        """
+        pub_upload = self.config["main_schema"]["tables"]["upload_files"]
+        arch_upload = self.config["archive_schema"]["tables"]["upload_files"]
+
+        from_table = pub_upload["table_name"]
+        to_table = arch_upload["table_name"]
+        meta_dataset_col = pub_upload["req_cols"]["metaload_dataset_id"]
+
+        self.copy_table(from_table, to_table,
+                        where_col=meta_dataset_col, equals_to=self.meta_dataset_id)
+
+    def delete_metadata_entry(self):
+        """
+        deletes metadata_table entry from public_schema
+        :return:
+        """
+        upload_files_table = self.config["main_schema"]["tables"]["upload_files"]
+        table = upload_files_table["table_name"]
+        meta_dataset_col = upload_files_table["req_cols"]["metaload_dataset_id"]
+        self.delete_table(table=table, where_col=meta_dataset_col, equal_to=self.meta_dataset_id)
+
     def _get_intersecting_columns(self, from_schema, from_table, to_schema, to_table):
         from_columns = self.conn.get_column_names(self._sql_name(from_schema, from_table))
         to_columns = self.conn.get_column_names(self._sql_name(to_schema, to_table))

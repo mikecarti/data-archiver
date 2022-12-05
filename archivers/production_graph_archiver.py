@@ -16,8 +16,8 @@ class ProductGraphArchiver(CommonDataArchiver):
     def archive_tables(self):
         self.copy_metadata_entry()
         self.copy_production_graph_tables()
-        self.delete_production_graph_tables()
-        self.delete_metadata_entry()
+        # self.delete_production_graph_tables()
+        # self.delete_metadata_entry()
 
     def copy_production_graph_tables(self):
         from_tables = self._get_json_table_names("main_schema", without="upload_files")
@@ -32,20 +32,6 @@ class ProductGraphArchiver(CommonDataArchiver):
         self.copy_tables(from_tables, to_tables, where_cols=metaload_id_cols,
                          equal_to_values=[self.meta_dataset_id])
 
-    def copy_metadata_entry(self):
-        """
-        :return:
-        """
-        pub_upload = self.config["main_schema"]["tables"]["upload_files"]
-        arch_upload = self.config["archive_schema"]["tables"]["upload_files"]
-
-        from_table = pub_upload["table_name"]
-        to_table = arch_upload["table_name"]
-        meta_dataset_col = pub_upload["req_cols"]["metaload_dataset_id"]
-
-        self.copy_table(from_table, to_table,
-                        where_col=meta_dataset_col, equals_to=self.meta_dataset_id)
-
     def delete_production_graph_tables(self):
         tables_db_names = self._get_db_table_names("main_schema", without="upload_files")
         tables_json_names = self._get_json_table_names("main_schema", without="upload_files")
@@ -55,9 +41,3 @@ class ProductGraphArchiver(CommonDataArchiver):
                                                                    tables_json_names=tables_json_names)
 
         self.delete_tables(tables_db_names, where_cols=metaload_id_cols, equal_to_values=[self.meta_dataset_id])
-
-    def delete_metadata_entry(self):
-        upload_files_ = self.config["main_schema"]["tables"]["upload_files"]
-        table = upload_files_["table_name"]
-        meta_dataset_col = upload_files_["req_cols"]["metaload_dataset_id"]
-        self.delete_table(table=table, where_col=meta_dataset_col, equal_to=self.meta_dataset_id)

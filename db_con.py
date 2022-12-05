@@ -36,43 +36,36 @@ class DBCon:
                 """,
                 [status_code, status_text, error_description, updated_at, task_id],
             )
-        self.conn.commit()
+        
 
-    def copy_table(self, from_schema_table, to_schema_table, columns, _id, archive_id_col):
+    def copy_table(self, from_schema_table, to_schema_table, columns):
         with self.conn.cursor() as cur:
             cur.execute(
                 f"""
-                INSERT INTO %s ({archive_id_col}, {columns})
-                SELECT %s as _, {columns} 
-                FROM %s
+                INSERT INTO %(to_schema_table)s ({columns})
+                SELECT {columns} 
+                FROM %(from_schema_table)s
                 """,
-                [to_schema_table,
-                 AsIs(_id),
-                 from_schema_table],
+                {'to_schema_table': to_schema_table, 'from_schema_table': from_schema_table}
             )
-            self.conn.commit()
-        print(f"Table '{from_schema_table}' copied to table '{to_schema_table}'")
+            
 
-    def copy_table_where(self, from_schema_table, to_schema_table, columns, _id, archive_id_col, where_col, equals_to):
+    def copy_table_where(self, from_schema_table, to_schema_table, columns, where_col, equals_to):
         with self.conn.cursor() as cur:
 
             cur.execute(
                 f"""
-                INSERT INTO %s ({archive_id_col}, {columns})
-                SELECT %s as _, {columns} 
-                FROM %s
-                WHERE %s = %s
+                INSERT INTO %(to_schema_table)s ({columns})
+                SELECT {columns} 
+                FROM %(from_schema_table)s
+                WHERE %(where_col)s = %(equals_to)s
+                RETURNING %(where_col)s
                 """,
-                [
-                 to_schema_table,
-                 AsIs(_id),
-                 from_schema_table,
-                 AsIs(where_col), AsIs(equals_to)
-                ]
+                {
+                    'to_schema_table': to_schema_table, 'from_schema_table': from_schema_table,
+                    'where_col': AsIs(where_col), 'equals_to': AsIs(equals_to)
+                }
             )
-            self.conn.commit()
-        print(f"Table '{from_schema_table}' copied to table '{to_schema_table}''"
-              f" WHERE '{where_col}' == {equals_to}")
 
     def delete_table(self, schema_table, where_col, equal_to):
         with self.conn.cursor() as cur:
@@ -88,31 +81,12 @@ class DBCon:
         with self.conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT * FROM %s LIMIT 0
+                SELECT * FROM %(schema_table_name)s LIMIT 0
                 """,
-                (schema_table_name,)
+                {'schema_table_name': schema_table_name}
             )
             col_names = [desc[0] for desc in cur.description]
             return col_names
-
-    def get_max_col_number(self, schema_table: str, col_name: str):
-        with self.conn.cursor() as cur:
-            col_name = AsIs(col_name)
-            cur.execute(
-                """
-                SELECT %s 
-                FROM %s
-                WHERE %s IS NOT NULL
-                ORDER BY %s DESC
-                LIMIT 1
-                """,
-                [col_name, schema_table, col_name, col_name]
-            )
-            res = cur.fetchone()
-            if res is None:
-                return 0
-            else:
-                return res[0]
 
 
 

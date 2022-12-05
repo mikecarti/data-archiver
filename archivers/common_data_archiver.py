@@ -1,6 +1,3 @@
-import warnings
-import pandas as pd
-from pandas.errors import SettingWithCopyWarning
 from psycopg2._psycopg import AsIs
 
 
@@ -12,7 +9,22 @@ class CommonDataArchiver:
         self.task_type = task_type
         self.config = in_schemas[task_type]
 
-    def copy_table(self, from_table, to_table, id_name,
+    def common_run(self, task_type: str):
+        try:
+            self.archive_tables()
+            self.conn.conn.commit()
+            status = True
+        except Exception as e:
+            self.logger.error(f"[НЕОБРАБОТАННАЯ ОШИБКА] При архивации {task_type} возникла неизвестная ошибка:\n"
+                              f"{e}!\n\n Откат изменений")
+            self.conn.conn.rollback()
+            status = False
+        return status
+
+    def archive_tables(self):
+        raise NotImplementedError("Must override archive_tables")
+
+    def copy_table(self, from_table, to_table,
                    from_schema=None, to_schema=None,
                    where_col=None, equals_to=None):
         """
@@ -20,7 +32,6 @@ class CommonDataArchiver:
 
         :param from_table:
         :param to_table:
-        :param id_name:  archivation id column name
         :param from_schema:
         :param to_schema:
         :param where_col:
@@ -34,15 +45,17 @@ class CommonDataArchiver:
         from_schema_table = self._sql_name(from_schema, from_table)
         to_schema_table = self._sql_name(to_schema, to_table)
 
-        _id = self.conn.get_max_col_number(to_schema_table, id_name)
-
         if equals_to is None:
-            self.conn.copy_table(from_schema_table, to_schema_table, from_columns, _id + 1, id_name)
+            self.conn.copy_table(from_schema_table, to_schema_table, from_columns)
+            print(f"Table '{from_schema_table}' copied to table '{to_schema_table}'")
+
         else:
             self.conn.copy_table_where(from_schema_table, to_schema_table,
-                                       from_columns, _id + 1, id_name, where_col, equals_to)
+                                       from_columns, where_col, equals_to)
+            print(f"Table '{from_schema_table}' copied to table '{to_schema_table}''"
+                  f" WHERE '{where_col}' == {equals_to}")
 
-    def copy_tables(self, from_tables, to_tables, id_archive_name, where_cols, equal_to_values):
+    def copy_tables(self, from_tables, to_tables, where_cols, equal_to_values):
         """
         Аналог функции copy_table, однако используемый для нескольких таблиц. from_tables, to_tables,
         where_cols, equal_to_values должны быть переданы как list обязательно.
@@ -58,7 +71,7 @@ class CommonDataArchiver:
 
         for from_table, to_table, where_col, equals_to_ \
                 in zip(from_tables, to_tables, where_cols, equal_to_values):
-            self.copy_table(from_table, to_table, id_archive_name,
+            self.copy_table(from_table, to_table,
                             where_col=where_col, equals_to=equals_to_)
 
     def delete_table(self, table, where_col, equal_to, schema=None):
@@ -66,6 +79,7 @@ class CommonDataArchiver:
         schema_table_name = self._sql_name(schema, table)
 
         self.conn.delete_table(schema_table_name, where_col, equal_to)
+        print(f"Rows of Table '{schema_table_name} WHERE '{where_col}' == {equal_to} are DELETED")
 
     def delete_tables(self, tables, where_cols, equal_to_values):
         equal_to_values, where_cols = self._normalise_filter_values(equal_to_values, where_cols, len(tables))

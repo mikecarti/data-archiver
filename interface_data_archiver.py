@@ -6,6 +6,7 @@ import logging.config
 
 from archivers.business_org_archiver import BusinessOrgArchiver
 from archivers.production_graph_archiver import ProductGraphArchiver
+from archivers.macroeconomic_archiver import MacroeconomicsArchiver
 
 
 class DataArchiver:
@@ -34,20 +35,29 @@ class DataArchiver:
     def run(self, d):
         self.comment = ""
         status, comment = False, "[Upload Error] Неизвестный тип файла!"
-        task_type = d["file_type"]
-        if task_type == "archive_business_orgs_spr":
-            orgs_arch = BusinessOrgArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
-            status = orgs_arch.run(d)
-        elif task_type == "archive_production_graph":
-            prod_arch = ProductGraphArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
-            status = prod_arch.run(d)
-        else:
-            print(f"Unregistered file_type / task_type: {task_type}")
+
+        task_type = self.get_task_type(d)
+        match task_type:
+            case "archive_business_orgs_spr":
+                orgs_arch = BusinessOrgArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
+                status = orgs_arch.run(d)
+            case "archive_production_graph":
+                prod_arch = ProductGraphArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
+                status = prod_arch.run(d)
+            case "archive_macroeconomic":
+                macro_econ_arch = MacroeconomicsArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
+                status = macro_econ_arch.run(d)
+            case _:
+                print(f"Unregistered task_type: {task_type}")
 
         comment = self.stream.getvalue()
         self.stream.seek(0)
         self.stream.truncate(0)
         return status, comment
+
+    def get_task_type(self, d):
+        task_type = f"{d['type']}_{d['file_type']}"
+        return task_type
 
     def config_task_logger(self, logger_name, logger_filename, stream):
         DEFAULT_LOGGING = {

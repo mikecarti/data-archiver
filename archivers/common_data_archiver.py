@@ -1,5 +1,6 @@
 from psycopg2._psycopg import AsIs
 import traceback
+import warnings
 
 
 class CommonDataArchiver:
@@ -49,14 +50,14 @@ class CommonDataArchiver:
         to_schema_table = self._sql_name(to_schema, to_table)
 
         if equals_to is None:
-            self.conn.copy_table(from_schema_table, to_schema_table, from_columns)
+            data = self.conn.copy_table(from_schema_table, to_schema_table, from_columns)
             print(f"Table '{from_schema_table}' copied to table '{to_schema_table}'")
-
         else:
-            self.conn.copy_table_where(from_schema_table, to_schema_table,
-                                       from_columns, where_col, equals_to)
+            data = self.conn.copy_table_where(from_schema_table, to_schema_table,
+                                              from_columns, where_col, equals_to)
             print(f"Table '{from_schema_table}' copied to table '{to_schema_table}''"
                   f" WHERE '{where_col}' == {equals_to}")
+        self._report_empty_result(data, from_schema_table)
 
     def copy_tables(self, from_tables, to_tables, where_cols, equal_to_values):
         """
@@ -81,14 +82,39 @@ class CommonDataArchiver:
         if schema is None: schema = self.in_schemas[self.task_type]["main_schema"]["schema_name"]
         schema_table_name = self._sql_name(schema, table)
 
-        self.conn.delete_table(schema_table_name, where_col, equal_to)
+        data = self.conn.delete_table_where(schema_table_name, where_col, equal_to)
         print(f"Rows of Table '{schema_table_name} WHERE '{where_col}' == {equal_to} are DELETED")
+        self._report_empty_result(data, schema_table_name)
 
     def delete_tables(self, tables: list[str], where_cols: list[str], equal_to_values: list[object]):
         equal_to_values, where_cols = self._normalise_filter_values(equal_to_values, where_cols, len(tables))
 
         for table, where_col, equal_to in zip(tables, where_cols, equal_to_values):
             self.delete_table(table, where_col, equal_to)
+
+    def copy_metadata_entry(self):
+        """
+        :return:
+        """
+        pub_upload = self.config["main_schema"]["tables"]["upload_files"]
+        arch_upload = self.config["archive_schema"]["tables"]["upload_files"]
+
+        from_table = pub_upload["table_name"]
+        to_table = arch_upload["table_name"]
+        meta_dataset_col = pub_upload["req_cols"]["metaload_dataset_id"]
+
+        self.copy_table(from_table, to_table,
+                        where_col=meta_dataset_col, equals_to=self.meta_dataset_id)
+
+    def delete_metadata_entry(self):
+        """
+        deletes metadata_table entry from public_schema
+        :return:
+        """
+        upload_files_table = self.config["main_schema"]["tables"]["upload_files"]
+        table = upload_files_table["table_name"]
+        meta_dataset_col = upload_files_table["req_cols"]["metaload_dataset_id"]
+        self.delete_table(table=table, where_col=meta_dataset_col, equal_to=self.meta_dataset_id)
 
     def _get_intersecting_columns(self, from_schema, from_table, to_schema, to_table):
         from_columns = self.conn.get_column_names(self._sql_name(from_schema, from_table))
@@ -179,3 +205,13 @@ class CommonDataArchiver:
     def _sql_name(schema_name, table_name):
         schema_and_table = f"{schema_name}.{table_name}"
         return AsIs(schema_and_table)
+
+    def _report_empty_result(self, data, schema_table_name):
+        if self._query_result_empty(data):
+            print(f"\nWARNING! Query result from Table '{schema_table_name}' was empty!\n")
+
+    def _query_result_empty(self, data):
+        empty_list = len(data) == 0
+        none_type = not data
+
+        return any([empty_list, none_type])

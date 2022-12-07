@@ -41,11 +41,11 @@ def run(rabbit_host, rabbit_port):
 
 
 
-    data = {
-        "task_id": 22, "metaload_user_id": 6, "metaload_comment": None, "metaload_dataset_id": 228, "filename": "",
-        "file_id": 1, "type": "archive", "user_id": 6, "file_upload_path": None, "file_type": "failure_schedule",
-        "data_send": "2022-12-01", "dataset_source_code": "Excel"
-    }
+    # data = {
+    #     "task_id": 22, "metaload_user_id": 6, "metaload_comment": None, "metaload_dataset_id": 228, "filename": "",
+    #     "file_id": 1, "type": "archive", "user_id": 6, "file_upload_path": None, "file_type": "failure_schedule",
+    #     "data_send": "2022-12-01", "dataset_source_code": "Excel"
+    # }
 
     # data = {
     #     "task_id": 22, "metaload_user_id": 6, "metaload_comment": None, "metaload_dataset_id": 8, "filename": "",
@@ -57,11 +57,11 @@ def run(rabbit_host, rabbit_port):
     #     "file_id": 1, "type": "archive", "user_id": 6, "file_upload_path": None, "file_type": "production_plan",
     #     "data_send": "2022-12-01", "dataset_source_code": "Excel"
     # }
-    # data = {
-    #     "task_id": 22, "metaload_user_id": 6, "metaload_comment": None, "metaload_dataset_id": 6, "filename": "",
-    #     "file_id": 1, "type": "archive", "user_id": 6, "file_upload_path": None, "file_type": "macroeconomics",
-    #     "data_send": "2022-12-01", "dataset_source_code": "Excel"
-    # }
+    data = {
+        "task_id": 22, "metaload_user_id": 6, "metaload_comment": None, "metaload_dataset_id": 6, "filename": "",
+        "file_id": 1, "type": "archive", "user_id": 6, "file_upload_path": None, "file_type": "macroeconomics",
+        "data_send": "2022-12-01", "dataset_source_code": "Excel"
+    }
     # data = {
     #     "task_id": 22, "metaload_user_id": 6, "metaload_comment": None, "metaload_dataset_id": 3, "filename": "",
     #     "file_id": 1, "type": "archive", "user_id": 6, "file_upload_path": None, "file_type": "production_graph",

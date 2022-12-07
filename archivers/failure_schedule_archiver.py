@@ -12,5 +12,3 @@ class FailureScheduleArchiver(CommonDataArchiver):
         self.meta_dataset_id = d["metaload_dataset_id"]
 
         return self.common_run(task_type=d['file_type'])
-
-

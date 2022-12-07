@@ -34,8 +34,8 @@ class CommonDataArchiver:
                                                                    schema=from_schema,
                                                                    tables_json_names=from_tables_json_names)
 
-        self.copy_tables(from_tables, to_tables,
-                         from_schema=from_schema, to_schema=to_schema,
+        self.copy_tables(from_tables=from_tables, to_tables=to_tables,
+                         from_schema_type=from_schema, to_schema_type=to_schema,
                          where_cols=metaload_id_cols,
                          equal_to_values=[self.meta_dataset_id])
 
@@ -67,18 +67,18 @@ class CommonDataArchiver:
         self.prepare_deleting_tables(schema=archive)
         self.delete_metadata_entry(schema=archive)
 
-    def copy_table(self, from_table, to_table,
-                   from_schema_type, to_schema_type,
+    def copy_table(self, from_schema_type: str, to_schema_type: str,
+                   from_table: str, to_table: str,
                    where_col=None, equals_to=None):
         """
         Copies the table in an append-like fashion
 
-        :param from_table:
-        :param to_table:
-        :param from_schema_type: Тип схемы из которой будет идти копирование:
-        :param to_schema_type: Тип схемы в которую будет идти копирование:
-        :param where_col:
-        :param equals_to:
+        :param from_schema_type: Схема, откуда будут скопированы значения
+        :param to_schema_type: Схема, куда будет скопированы значеиня
+        :param from_table: Из какой таблицы скопировать,
+        :param to_table: В какую таблицу скопировать,
+        :param where_col: Колонка, по которой проходит фильтрация,
+        :param equals_to: Фильтр по колонке where_col.
         :return:
         """
         assert from_schema_type in ("main_schema", "archive_schema")
@@ -101,27 +101,45 @@ class CommonDataArchiver:
         self._report_results(data, specification=specification, mode="copy",
                              from_table=from_schema_table, to_table=to_schema_table)
 
-    def copy_tables(self, from_tables, to_tables, from_schema, to_schema, where_cols, equal_to_values):
+    def copy_tables(self, from_schema_type: str, to_schema_type: str,
+                    from_tables: list[str], to_tables: list[str],
+                    where_cols: list[str], equal_to_values: list[object]):
         """
         Аналог функции copy_table, однако используемый для нескольких таблиц. from_tables, to_tables,
         where_cols, equal_to_values должны быть переданы как list обязательно.
 
-        :param from_tables:
-        :param to_tables:
-        :param where_cols: list. Колонки, по которым проходит фильтрация,
-        :param equal_to_values: list. Значения на которые проверяются экспортируемые ряды.
+        :param from_schema_type: Схема, откуда будут скопированы значения
+        :param to_schema_type: Схема, куда будет скопированы значеиня
+        :param from_tables: Из каких таблиц скопировать, порядок должен обязательно совпадать с to_tables, where_cols, equal_to_values
+        :param to_tables: В какие таблицы скопировать, порядок должен обязательно совпадать с from_tables, where_cols, equal_to_values
+        :param where_cols: Колонки, по которым проходит фильтрация, порядок должен обязательно совпадать с from_tables, to_tables, equal_to_values
+        :param equal_to_values: list. Значения-фильтры для колонок where_cols. порядок должен обязательно совпадать с from_tables, to_tables, where_cols
         :return:
         """
-        self._check_for_length(from_tables, to_tables)
+        self._check_types_validity(equal_to_values, from_tables, to_tables, where_cols)
         equal_to_values, where_cols = self._normalise_filter_values(equal_to_values, where_cols, len(from_tables))
 
         for from_table, to_table, where_col, equals_to \
                 in zip(from_tables, to_tables, where_cols, equal_to_values):
-            self.copy_table(from_table, to_table,
-                            from_schema_type=from_schema, to_schema_type=to_schema,
+            self.copy_table(from_table=from_table, to_table=to_table,
+                            from_schema_type=from_schema_type, to_schema_type=to_schema_type,
                             where_col=where_col, equals_to=equals_to)
 
-    def delete_table(self, table_name, where_col, equal_to, schema_type):
+    def _check_types_validity(self, equal_to_values, from_tables, to_tables, where_cols):
+        assert len(from_tables) == len(to_tables), f'{self.copy_tables.__name__}:' \
+                                                   f' trying to pass different number of from_tables and to_tables'
+        assert type(from_tables) == type(to_tables) == type(where_cols) == type(
+            equal_to_values) == list, "Parameter has to be a list"
+
+    def delete_table(self, table_name: str, where_col: str, equal_to: object, schema_type: str):
+        """
+        Удаляет данные из таблицы с заданным фильтром равенства по колонке.
+        :param table_name: Имя таблицы, как в бд
+        :param where_col: Колонка для фильтрации как в бд
+        :param equal_to: Ряды, где колонка where_col равна equal_to будут удалены
+        :param schema_type: паблик или архив
+        :return:
+        """
         assert schema_type in ("main_schema", "archive_schema")
         schema_name = self.config["schemas"][schema_type]
 
@@ -132,6 +150,7 @@ class CommonDataArchiver:
         self._report_results(data, mode="delete", specification=spec, from_table=schema_table_name)
 
     def delete_tables(self, tables: list[str], schema: str, where_cols: list[str], equal_to_values: list[object]):
+        self._check_types_validity(equal_to_values, tables, tables, where_cols)
         equal_to_values, where_cols = self._normalise_filter_values(equal_to_values, where_cols, len(tables))
 
         for table, where_col, equal_to in zip(tables, where_cols, equal_to_values):
@@ -147,7 +166,7 @@ class CommonDataArchiver:
 
         meta_dataset_col = upload_files["req_cols"]["metaload_dataset_id"]
 
-        self.copy_table(from_table, to_table,
+        self.copy_table(from_table=from_table, to_table=to_table,
                         where_col=meta_dataset_col, equals_to=self.meta_dataset_id,
                         from_schema_type=from_schema, to_schema_type=to_schema)
 
@@ -242,11 +261,6 @@ class CommonDataArchiver:
         if type(equal_to_values) != list != type(where_cols):
             raise TypeError(
                 f'{self.copy_tables.__name__}: параметры equal_to_values и where_cols обязаны быть list!')
-
-    def _check_for_length(self, from_tables, to_tables):
-        if len(from_tables) != len(to_tables):
-            raise IndexError(
-                f'{self.copy_tables.__name__}: trying to pass different number of from_tables and to_tables')
 
     def _get_db_table_names(self, without=None):
         """

@@ -73,6 +73,12 @@
     "main_schema": {
       "schema_name": "public",
       "tables": {
+        "upload_files": {
+          "table_name": "upload_files",
+          "req_cols": {
+            "metaload_dataset_id": "id"
+          }
+        },
         "discount_rate": {
           "table_name": "macroeconomic_discount_rate",
           "req_cols": {
@@ -102,6 +108,12 @@
     "archive_schema": {
       "schema_name": "archive",
       "tables": {
+        "upload_files": {
+          "table_name": "upload_files",
+          "req_cols": {
+            "metaload_dataset_id": "id"
+          }
+        },
         "discount_rate": {
           "table_name": "macroeconomic_discount_rate",
           "req_cols": {

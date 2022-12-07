@@ -1,0 +1,18 @@
+2022-12-07 12:28:23 INFO: Macroeconomics Archiver running
+2022-12-07 12:28:23 INFO: Таблица 'public.upload_files'  скопирована в таблицу 'archive.upload_files'' ГДЕ 'id' == 2
+2022-12-07 12:28:23 INFO: Таблица 'public.macroeconomic_discount_rate'  скопирована в таблицу 'archive.macroeconomic_discount_rate'' ГДЕ 'metaload_dataset_id' == 2
+2022-12-07 12:28:23 INFO: Таблица 'public.macroeconomic_exchange_rates'  скопирована в таблицу 'archive.macroeconomic_exchange_rates'' ГДЕ 'metaload_dataset_id' == 2
+2022-12-07 12:28:23 INFO: Таблица 'public.macroeconomic_inflation_coeff'  скопирована в таблицу 'archive.macroeconomic_inflation_coeff'' ГДЕ 'metaload_dataset_id' == 2
+2022-12-07 12:28:23 INFO: Таблица 'public.macroeconomic_metal_prices'  скопирована в таблицу 'archive.macroeconomic_metal_prices'' ГДЕ 'metaload_dataset_id' == 2
+2022-12-07 12:28:23 INFO: Ряды таблицы 'public.macroeconomic_discount_rate ГДЕ 'metaload_dataset_id' == 2 УДАЛЕНЫ
+2022-12-07 12:28:23 INFO: Ряды таблицы 'public.macroeconomic_exchange_rates ГДЕ 'metaload_dataset_id' == 2 УДАЛЕНЫ
+2022-12-07 12:28:23 INFO: Ряды таблицы 'public.macroeconomic_inflation_coeff ГДЕ 'metaload_dataset_id' == 2 УДАЛЕНЫ
+2022-12-07 12:28:23 INFO: Ряды таблицы 'public.macroeconomic_metal_prices ГДЕ 'metaload_dataset_id' == 2 УДАЛЕНЫ
+2022-12-07 12:28:23 INFO: Ряды таблицы 'public.upload_files ГДЕ 'id' == 2 УДАЛЕНЫ
+2022-12-07 12:28:38 INFO: Product Graph Archiver running
+2022-12-07 12:28:38 INFO: Таблица 'public.upload_files'  скопирована в таблицу 'archive.upload_files'' ГДЕ 'id' == 3
+2022-12-07 12:28:38 INFO: Таблица 'public.production_graph_edges'  скопирована в таблицу 'archive.production_graph_edges'' ГДЕ 'metaload_dataset_id' == 3
+2022-12-07 12:28:38 INFO: Таблица 'public.production_graph_nodes'  скопирована в таблицу 'archive.production_graph_nodes'' ГДЕ 'metaload_dataset_id' == 3
+2022-12-07 12:28:38 INFO: Ряды таблицы 'public.production_graph_edges ГДЕ 'metaload_dataset_id' == 3 УДАЛЕНЫ
+2022-12-07 12:28:38 INFO: Ряды таблицы 'public.production_graph_nodes ГДЕ 'metaload_dataset_id' == 3 УДАЛЕНЫ
+2022-12-07 12:28:38 INFO: Ряды таблицы 'public.upload_files ГДЕ 'id' == 3 УДАЛЕНЫ

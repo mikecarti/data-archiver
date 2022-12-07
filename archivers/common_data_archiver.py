@@ -25,6 +25,31 @@ class CommonDataArchiver:
             status = False
         return status
 
+    def prepare_copying_tables(self):
+        from_tables = self._get_db_table_names("main_schema", without="upload_files")
+        to_tables = self._get_db_table_names("main_schema", without="upload_files")
+
+        from_tables_json_names = self._get_json_table_names(schema="main_schema", without="upload_files")
+
+        metaload_id_cols = self._get_required_columns_names_for_bd(json_column_name="metaload_dataset_id",
+                                                                   schema="main_schema",
+                                                                   tables_json_names=from_tables_json_names)
+
+        self.copy_tables(from_tables, to_tables, where_cols=metaload_id_cols,
+                         equal_to_values=[self.meta_dataset_id])
+
+    def prepare_deleting_tables(self):
+        tables_db_names = self._get_db_table_names("main_schema", without="upload_files")
+        tables_json_names = self._get_json_table_names("main_schema", without="upload_files")
+
+        metaload_id_cols = self._get_required_columns_names_for_bd(json_column_name="metaload_dataset_id",
+                                                                   schema="main_schema",
+                                                                   tables_json_names=tables_json_names)
+
+        self.delete_tables(tables_db_names, where_cols=metaload_id_cols, equal_to_values=[self.meta_dataset_id])
+
+
+
     def archive_tables(self):
         raise NotImplementedError("Must override archive_tables")
 
@@ -94,6 +119,7 @@ class CommonDataArchiver:
 
     def copy_metadata_entry(self):
         """
+        copies metadata_table entry from public_schema to archive_schema
         :return:
         """
         pub_upload = self.config["main_schema"]["tables"]["upload_files"]
@@ -160,8 +186,8 @@ class CommonDataArchiver:
             columns_names = columns_names * elements_num
         elif len(columns_names) > 1 and len(equal_to_values) == 1:
             equal_to_values = equal_to_values * len(columns_names)
-        assert len(equal_to_values) == elements_num
-        assert len(columns_names) == elements_num
+        assert len(equal_to_values) == elements_num, f"Ошибка, len(equal_to_values): {len(equal_to_values)}, elements_num: {elements_num}"
+        assert len(columns_names) == elements_num, f"Ошибка, len(columns_names): {len(columns_names)}, elements_num: {elements_num}"
 
         return equal_to_values, columns_names
 

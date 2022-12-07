@@ -8,8 +8,10 @@ class BusinessOrgArchiver(CommonDataArchiver):
 
     def run(self, d):
         self.logger.info("Business Org Archiver running")
+        self.logger.error("Ошибка: Реализация намеренно отсутствует.")
+        return
 
-        return self.common_run(d['file_type'])
+        # return self.common_run(d['file_type'])
 
     def archive_tables(self):
         """

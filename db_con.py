@@ -37,37 +37,37 @@ class DBCon:
                 [status_code, status_text, error_description, updated_at, task_id],
             )
 
-    def copy_table(self, from_schema_table, to_schema_table, columns):
+    def copy_table(self, from_schema_table: str, to_schema_table: str, columns: str):
         with self.conn.cursor() as cur:
             cur.execute(
                 f"""
-                INSERT INTO %(to_schema_table)s ({columns})
+                INSERT INTO %(to_table)s ({columns})
                 SELECT {columns} 
-                FROM %(from_schema_table)s
---                 RETURNING {columns[0]}
+                FROM %(from_table)s
+                RETURNING {columns}
                 """,
-                {'to_schema_table': to_schema_table, 'from_schema_table': from_schema_table}
+                {'to_table': to_schema_table, 'from_table': from_schema_table}
             )
-            # some_data = cur.fetchall()
-            return 1
+            some_data = cur.fetchall()
+            return some_data
 
     def copy_table_where(self, from_schema_table, to_schema_table, columns, where_col, equals_to):
         with self.conn.cursor() as cur:
             cur.execute(
                 f"""
-                INSERT INTO %(to_schema_table)s ({columns})
+                INSERT INTO %(to_table)s ({columns})
                 SELECT {columns} 
-                FROM %(from_schema_table)s
+                FROM %(from_table)s
                 WHERE %(where_col)s = %(equals_to)s
---                 RETURNING %(where_col)s
+                RETURNING %(where_col)s
                 """,
                 {
-                    'to_schema_table': to_schema_table, 'from_schema_table': from_schema_table,
+                    'to_table': to_schema_table, 'from_table': from_schema_table,
                     'where_col': AsIs(where_col), 'equals_to': AsIs(equals_to)
                 }
             )
-            # where_col_data = cur.fetchall()
-            return 1
+            where_col_data = cur.fetchall()
+            return where_col_data
 
     def delete_table_where(self, schema_table, where_col, equal_to):
         with self.conn.cursor() as cur:
@@ -75,12 +75,12 @@ class DBCon:
                 f"""    
                 DELETE FROM %(schema_and_table)s
                 WHERE %(column_name)s = %(value)s
---                 RETURNING %(column_name)s
+                RETURNING %(column_name)s
                 """,
                 {'schema_and_table': schema_table, 'column_name': AsIs(where_col), 'value': equal_to}
             )
-            # where_col_data = cur.fetchall()
-            return 1
+            where_col_data = cur.fetchall()
+            return where_col_data
 
     def get_column_names(self, schema_table_name):
         with self.conn.cursor() as cur:

@@ -7,6 +7,7 @@ import logging.config
 from archivers.business_org_archiver import BusinessOrgArchiver
 from archivers.production_graph_archiver import ProductGraphArchiver
 from archivers.macroeconomic_archiver import MacroeconomicsArchiver
+from archivers.production_plans_archiver import ProductionPlansArchiver
 
 
 class DataArchiver:
@@ -47,6 +48,9 @@ class DataArchiver:
             case "archive_macroeconomics":
                 macro_econ_arch = MacroeconomicsArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
                 status = macro_econ_arch.run(d)
+            case "archive_production_plan":
+                prod_plans_arch = ProductionPlansArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
+                status = prod_plans_arch.run(d)
             case _:
                 print(f"Unregistered task_type: {task_type}")
 

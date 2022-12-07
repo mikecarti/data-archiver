@@ -5,8 +5,7 @@
       "tables": {
         "business_orgs_spr": {
           "table_name": "business_orgs_spr",
-          "req_cols": {
-          }
+          "req_cols": {}
         }
       }
     },
@@ -15,8 +14,7 @@
       "tables": {
         "business_orgs_spr": {
           "table_name": "business_orgs_spr",
-          "req_cols": {
-          }
+          "req_cols": {}
         }
       }
     }
@@ -116,23 +114,69 @@
         },
         "discount_rate": {
           "table_name": "macroeconomic_discount_rate",
-          "req_cols": {
-          }
+          "req_cols": {}
         },
         "exchange_rates": {
           "table_name": "macroeconomic_exchange_rates",
-          "req_cols": {
-          }
+          "req_cols": {}
         },
         "inflation_coeff": {
           "table_name": "macroeconomic_inflation_coeff",
-          "req_cols": {
-          }
+          "req_cols": {}
         },
         "metal_prices": {
           "table_name": "macroeconomic_metal_prices",
+          "req_cols": {}
+        }
+      }
+    }
+  },
+  "archive_production_plan": {
+    "main_schema": {
+      "schema_name": "public",
+      "tables": {
+        "upload_files": {
+          "table_name": "upload_files",
           "req_cols": {
+            "metaload_dataset_id": "id"
           }
+        },
+        "plans": {
+          "table_name": "production_plans",
+          "req_cols": {
+            "metaload_dataset_id": "metaload_dataset_id"
+          }
+        },
+        "plans_initial_nzp": {
+          "table_name": "production_plans_initial_nzp",
+          "req_cols": {"metaload_dataset_id": "metaload_dataset_id"}
+        },
+        "plans_initial_sklad": {
+          "table_name": "production_plans_initial_sklad",
+          "req_cols": {"metaload_dataset_id": "metaload_dataset_id"}
+        }
+      }
+    },
+    "archive_schema": {
+      "schema_name": "archive",
+      "tables": {
+        "upload_files": {
+          "table_name": "upload_files",
+          "req_cols": {
+            "metaload_dataset_id": "id"
+          }
+        },
+        "plans": {
+          "table_name": "production_plans",
+          "req_cols": {}
+        },
+        "plans_initial_nzp": {
+          "table_name": "production_plans_initial_nzp",
+          "req_cols": {}
+        },
+        "plans_initial_sklad": {
+          "table_name": "production_plans_initial_sklad",
+          "req_cols": {}
         }
       }
     }

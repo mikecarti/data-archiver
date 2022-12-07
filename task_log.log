@@ -1,9 +1,0 @@
-2022-12-07 16:21:48 INFO: Production Plans Archiver running
-2022-12-07 16:21:48 INFO: Таблица 'archive.upload_files' скопирована в таблицу 'public.upload_files' ГДЕ 'id' == 5
-2022-12-07 16:21:48 INFO: Таблица 'archive.production_plans' скопирована в таблицу 'public.production_plans' ГДЕ 'metaload_dataset_id' == 5
-2022-12-07 16:21:48 INFO: Таблица 'archive.production_plans_initial_nzp' скопирована в таблицу 'public.production_plans_initial_nzp' ГДЕ 'metaload_dataset_id' == 5
-2022-12-07 16:21:48 INFO: Таблица 'archive.production_plans_initial_sklad' скопирована в таблицу 'public.production_plans_initial_sklad' ГДЕ 'metaload_dataset_id' == 5
-2022-12-07 16:21:48 INFO: Ряды таблицы 'production_plans ГДЕ 'metaload_dataset_id' == 5 УДАЛЕНЫ!
-2022-12-07 16:21:48 INFO: Ряды таблицы 'production_plans_initial_nzp ГДЕ 'metaload_dataset_id' == 5 УДАЛЕНЫ!
-2022-12-07 16:21:48 INFO: Ряды таблицы 'production_plans_initial_sklad ГДЕ 'metaload_dataset_id' == 5 УДАЛЕНЫ!
-2022-12-07 16:21:48 INFO: Ряды таблицы 'upload_files ГДЕ 'id' == 5 УДАЛЕНЫ!

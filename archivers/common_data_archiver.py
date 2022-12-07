@@ -5,15 +5,14 @@ import traceback
 class CommonDataArchiver:
     def __init__(self, conn, in_schemas, logger, task_type):
         self.conn = conn
-        self.in_schemas = in_schemas
-        self.logger = logger  # unused
+        self.logger = logger
         self.task_type = task_type
         self.config = in_schemas[task_type]
 
     def common_run(self, task_type: str):
         try:
-            self.recover_tables_from_archive()
-            # self.archive_tables()
+            self.archive_tables()
+            # self.recover_tables_from_archive()
             self.conn.conn.commit()
             status = True
         except Exception as e:
@@ -26,10 +25,10 @@ class CommonDataArchiver:
         return status
 
     def prepare_copying_tables(self, from_schema, to_schema):
-        from_tables = self._get_db_table_names(from_schema, without="upload_files")
-        to_tables = self._get_db_table_names(to_schema, without="upload_files")
+        from_tables = self._get_db_table_names(without="upload_files")
+        to_tables = self._get_db_table_names(without="upload_files")
 
-        from_tables_json_names = self._get_json_table_names(schema=from_schema, without="upload_files")
+        from_tables_json_names = self._get_json_table_names(without="upload_files")
 
         metaload_id_cols = self._get_required_columns_names_for_bd(json_column_name="metaload_dataset_id",
                                                                    schema=from_schema,
@@ -41,8 +40,8 @@ class CommonDataArchiver:
                          equal_to_values=[self.meta_dataset_id])
 
     def prepare_deleting_tables(self, schema):
-        tables_db_names = self._get_db_table_names(schema, without="upload_files")
-        tables_json_names = self._get_json_table_names(schema, without="upload_files")
+        tables_db_names = self._get_db_table_names(without="upload_files")
+        tables_json_names = self._get_json_table_names(without="upload_files")
 
         metaload_id_cols = self._get_required_columns_names_for_bd(json_column_name="metaload_dataset_id",
                                                                    schema=schema,
@@ -85,8 +84,8 @@ class CommonDataArchiver:
         assert from_schema_type in ("main_schema", "archive_schema")
         assert to_schema_type in ("main_schema", "archive_schema")
 
-        from_schema_name = self.config[from_schema_type]["schema_name"]
-        to_schema_name = self.config[to_schema_type]["schema_name"]
+        from_schema_name = self.config["schemas"][from_schema_type]
+        to_schema_name = self.config["schemas"][to_schema_type]
 
         from_columns = self._get_intersecting_columns(from_schema_name, from_table, to_schema_name, to_table)
         from_schema_table = self._sql_name(from_schema_name, from_table)
@@ -124,13 +123,13 @@ class CommonDataArchiver:
 
     def delete_table(self, table_name, where_col, equal_to, schema_type):
         assert schema_type in ("main_schema", "archive_schema")
-        schema_name = self.config[schema_type]["schema_name"]
+        schema_name = self.config["schemas"][schema_type]
 
         schema_table_name = self._sql_name(schema_name, table_name)
 
         data = self.conn.delete_table_where(schema_table_name, where_col, equal_to)
         spec = f"ГДЕ '{where_col}' == {equal_to}"
-        self._report_results(data, mode="delete", specification=spec, from_table=table_name)
+        self._report_results(data, mode="delete", specification=spec, from_table=schema_table_name)
 
     def delete_tables(self, tables: list[str], schema: str, where_cols: list[str], equal_to_values: list[object]):
         equal_to_values, where_cols = self._normalise_filter_values(equal_to_values, where_cols, len(tables))
@@ -143,12 +142,10 @@ class CommonDataArchiver:
         copies metadata_table entry from public_schema to archive_schema
         :return:
         """
-        pub_upload = self.config[from_schema]["tables"]["upload_files"]
-        arch_upload = self.config[to_schema]["tables"]["upload_files"]
+        upload_files = self.config["tables"]["upload_files"]
+        from_table = to_table = upload_files["table_name"]
 
-        from_table = pub_upload["table_name"]
-        to_table = arch_upload["table_name"]
-        meta_dataset_col = pub_upload["req_cols"]["metaload_dataset_id"]
+        meta_dataset_col = upload_files["req_cols"]["metaload_dataset_id"]
 
         self.copy_table(from_table, to_table,
                         where_col=meta_dataset_col, equals_to=self.meta_dataset_id,
@@ -159,7 +156,7 @@ class CommonDataArchiver:
         deletes metadata_table entry from public_schema
         :return:
         """
-        upload_files_table = self.config[schema]["tables"]["upload_files"]
+        upload_files_table = self.config["tables"]["upload_files"]
         table = upload_files_table["table_name"]
         meta_dataset_col = upload_files_table["req_cols"]["metaload_dataset_id"]
         self.delete_table(table_name=table, schema_type=schema, where_col=meta_dataset_col,
@@ -208,7 +205,7 @@ class CommonDataArchiver:
         :param json_column_name:
         :return: metaload_id_col
         """
-        return self.in_schemas[self.task_type][schema]["tables"][table_name]["req_cols"][json_column_name]
+        return self.config["tables"][table_name]["req_cols"][json_column_name]
 
     def _get_required_columns_names_for_bd(self, schema: str,
                                            tables_json_names: list[str],
@@ -251,15 +248,14 @@ class CommonDataArchiver:
             raise IndexError(
                 f'{self.copy_tables.__name__}: trying to pass different number of from_tables and to_tables')
 
-    def _get_db_table_names(self, schema, without=None):
+    def _get_db_table_names(self, without=None):
         """
         Возвращает имена колонок в таблице, так как они предположительно отображены в базе данных. Информация
         берется из JSON типа read-only.
-        :param schema:
         :param without: json имя таблицы
         :return:
         """
-        tables = self.config[schema]["tables"]
+        tables = self.config["tables"]
         if without is not None:
             without_name = tables[without]["table_name"]
         else:
@@ -268,7 +264,7 @@ class CommonDataArchiver:
         names = [v["table_name"] for k, v in tables.items() if v["table_name"] != without_name]
         return names
 
-    def _get_json_table_names(self, schema, without=None):
+    def _get_json_table_names(self, without=None):
         """
         Возвращает JSON имена колонок в таблице. Эти имена не обязаны соответствовать именам колонок в бд.
         Информация берется из JSON файла типа read-only.
@@ -276,7 +272,7 @@ class CommonDataArchiver:
         :param without: json имя таблицы
         :return:
         """
-        tables = self.config[schema]["tables"]
+        tables = self.config["tables"]
         names = [k for k, v in tables.items() if k != without]
         return names
 

@@ -1,180 +1,108 @@
 {
   "archive_business_orgs_spr": {
-    "main_schema": {
-      "schema_name": "public",
-      "tables": {
-        "business_orgs_spr": {
-          "table_name": "business_orgs_spr",
-          "req_cols": {}
-        }
-      }
+    "schemas": {
+      "main_schema": "public",
+      "archive_schema": "archive"
     },
-    "archive_schema": {
-      "schema_name": "archive",
-      "tables": {
-        "business_orgs_spr": {
-          "table_name": "business_orgs_spr",
-          "req_cols": {}
-        }
+    "tables": {
+      "business_orgs_spr": {
+        "table_name": "business_orgs_spr",
+        "req_cols": {}
       }
     }
   },
   "archive_production_graph": {
-    "main_schema": {
-      "schema_name": "public",
-      "tables": {
-        "production_graph_edges": {
-          "table_name": "production_graph_edges",
-          "req_cols": {
-            "metaload_dataset_id": "metaload_dataset_id"
-          }
-        },
-        "production_graph_nodes": {
-          "table_name": "production_graph_nodes",
-          "req_cols": {
-            "metaload_dataset_id": "metaload_dataset_id"
-          }
-        },
-        "upload_files": {
-          "table_name": "upload_files",
-          "req_cols": {
-            "metaload_dataset_id": "id"
-          }
-        }
-      }
+    "schemas": {
+      "main_schema": "public",
+      "archive_schema": "archive"
     },
-    "archive_schema": {
-      "schema_name": "archive",
-      "tables": {
-        "production_graph_edges": {
-          "table_name": "production_graph_edges",
-          "req_cols": {
-            "metaload_dataset_id": "metaload_dataset_id"
-          }
-        },
-        "production_graph_nodes": {
-          "table_name": "production_graph_nodes",
-          "req_cols": {
-            "metaload_dataset_id": "metaload_dataset_id"
-          }
-        },
-        "upload_files": {
-          "table_name": "upload_files",
-          "req_cols": {
-            "metaload_dataset_id": "id"
-          }
+    "tables": {
+      "production_graph_edges": {
+        "table_name": "production_graph_edges",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
+        }
+      },
+      "production_graph_nodes": {
+        "table_name": "production_graph_nodes",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
+        }
+      },
+      "upload_files": {
+        "table_name": "upload_files",
+        "req_cols": {
+          "metaload_dataset_id": "id"
         }
       }
     }
   },
   "archive_macroeconomics": {
-    "main_schema": {
-      "schema_name": "public",
-      "tables": {
-        "upload_files": {
-          "table_name": "upload_files",
-          "req_cols": {
-            "metaload_dataset_id": "id"
-          }
-        },
-        "discount_rate": {
-          "table_name": "macroeconomic_discount_rate",
-          "req_cols": {
-            "metaload_dataset_id": "metaload_dataset_id"
-          }
-        },
-        "exchange_rates": {
-          "table_name": "macroeconomic_exchange_rates",
-          "req_cols": {
-            "metaload_dataset_id": "metaload_dataset_id"
-          }
-        },
-        "inflation_coeff": {
-          "table_name": "macroeconomic_inflation_coeff",
-          "req_cols": {
-            "metaload_dataset_id": "metaload_dataset_id"
-          }
-        },
-        "metal_prices": {
-          "table_name": "macroeconomic_metal_prices",
-          "req_cols": {
-            "metaload_dataset_id": "metaload_dataset_id"
-          }
-        }
-      }
+    "schemas": {
+      "main_schema": "public",
+      "archive_schema": "archive"
     },
-    "archive_schema": {
-      "schema_name": "archive",
-      "tables": {
-        "upload_files": {
-          "table_name": "upload_files",
-          "req_cols": {
-            "metaload_dataset_id": "id"
-          }
-        },
-        "discount_rate": {
-          "table_name": "macroeconomic_discount_rate",
-          "req_cols": {}
-        },
-        "exchange_rates": {
-          "table_name": "macroeconomic_exchange_rates",
-          "req_cols": {}
-        },
-        "inflation_coeff": {
-          "table_name": "macroeconomic_inflation_coeff",
-          "req_cols": {}
-        },
-        "metal_prices": {
-          "table_name": "macroeconomic_metal_prices",
-          "req_cols": {}
+    "tables": {
+      "upload_files": {
+        "table_name": "upload_files",
+        "req_cols": {
+          "metaload_dataset_id": "id"
+        }
+      },
+      "discount_rate": {
+        "table_name": "macroeconomic_discount_rate",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
+        }
+      },
+      "exchange_rates": {
+        "table_name": "macroeconomic_exchange_rates",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
+        }
+      },
+      "inflation_coeff": {
+        "table_name": "macroeconomic_inflation_coeff",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
+        }
+      },
+      "metal_prices": {
+        "table_name": "macroeconomic_metal_prices",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
         }
       }
     }
   },
   "archive_production_plan": {
-    "main_schema": {
-      "schema_name": "public",
-      "tables": {
-        "upload_files": {
-          "table_name": "upload_files",
-          "req_cols": {
-            "metaload_dataset_id": "id"
-          }
-        },
-        "plans": {
-          "table_name": "production_plans",
-          "req_cols": {
-            "metaload_dataset_id": "metaload_dataset_id"
-          }
-        },
-        "plans_initial_nzp": {
-          "table_name": "production_plans_initial_nzp",
-          "req_cols": {"metaload_dataset_id": "metaload_dataset_id"}
-        },
-        "plans_initial_sklad": {
-          "table_name": "production_plans_initial_sklad",
-          "req_cols": {"metaload_dataset_id": "metaload_dataset_id"}
-        }
-      }
+    "schemas": {
+      "main_schema": "public",
+      "archive_schema": "archive"
     },
-    "archive_schema": {
-      "schema_name": "archive",
-      "tables": {
-        "upload_files": {
-          "table_name": "upload_files",
-          "req_cols": {"metaload_dataset_id": "id"}
-        },
-        "plans": {
-          "table_name": "production_plans",
-          "req_cols": {"metaload_dataset_id": "metaload_dataset_id"}
-        },
-        "plans_initial_nzp": {
-          "table_name": "production_plans_initial_nzp",
-          "req_cols": {"metaload_dataset_id": "metaload_dataset_id"}
-        },
-        "plans_initial_sklad": {
-          "table_name": "production_plans_initial_sklad",
-          "req_cols": {"metaload_dataset_id": "metaload_dataset_id"}
+    "tables": {
+      "upload_files": {
+        "table_name": "upload_files",
+        "req_cols": {
+          "metaload_dataset_id": "id"
+        }
+      },
+      "plans": {
+        "table_name": "production_plans",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
+        }
+      },
+      "plans_initial_nzp": {
+        "table_name": "production_plans_initial_nzp",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
+        }
+      },
+      "plans_initial_sklad": {
+        "table_name": "production_plans_initial_sklad",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
         }
       }
     }

@@ -12,9 +12,3 @@ class ProductionPlansArchiver(CommonDataArchiver):
 
         return self.common_run(task_type=d['file_type'])
 
-    def archive_tables(self):
-        self.copy_metadata_entry()
-        self.prepare_copying_tables()
-        self.prepare_deleting_tables()
-        self.delete_metadata_entry()
-

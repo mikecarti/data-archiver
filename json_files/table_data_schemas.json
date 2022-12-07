@@ -126,5 +126,25 @@
         }
       }
     }
+  },
+  "archive_failure_schedule": {
+    "schemas": {
+      "main_schema": "public",
+      "archive_schema": "archive"
+    },
+    "tables": {
+      "upload_files": {
+        "table_name": "upload_files",
+        "req_cols": {
+          "metaload_dataset_id": "id"
+        }
+      },
+      "failure_schedule": {
+        "table_name": "failure_schedule",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
+        }
+      }
+    }
   }
 }

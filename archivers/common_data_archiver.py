@@ -35,7 +35,9 @@ class CommonDataArchiver:
                                                                    schema=from_schema,
                                                                    tables_json_names=from_tables_json_names)
 
-        self.copy_tables(from_tables, to_tables, where_cols=metaload_id_cols,
+        self.copy_tables(from_tables, to_tables,
+                         from_schema=from_schema, to_schema=to_schema,
+                         where_cols=metaload_id_cols,
                          equal_to_values=[self.meta_dataset_id])
 
     def prepare_deleting_tables(self, schema):
@@ -67,23 +69,28 @@ class CommonDataArchiver:
         self.delete_metadata_entry(schema=archive)
 
     def copy_table(self, from_table, to_table,
-                   from_schema, to_schema,
+                   from_schema_type, to_schema_type,
                    where_col=None, equals_to=None):
         """
         Copies the table in an append-like fashion
 
         :param from_table:
         :param to_table:
-        :param from_schema:
-        :param to_schema:
+        :param from_schema_type: Тип схемы из которой будет идти копирование:
+        :param to_schema_type: Тип схемы в которую будет идти копирование:
         :param where_col:
         :param equals_to:
         :return:
         """
+        assert from_schema_type in ("main_schema", "archive_schema")
+        assert to_schema_type in ("main_schema", "archive_schema")
 
-        from_columns = self._get_intersecting_columns(from_schema, from_table, to_schema, to_table)
-        from_schema_table = self._sql_name(from_schema, from_table)
-        to_schema_table = self._sql_name(to_schema, to_table)
+        from_schema_name = self.config[from_schema_type]["schema_name"]
+        to_schema_name = self.config[to_schema_type]["schema_name"]
+
+        from_columns = self._get_intersecting_columns(from_schema_name, from_table, to_schema_name, to_table)
+        from_schema_table = self._sql_name(from_schema_name, from_table)
+        to_schema_table = self._sql_name(to_schema_name, to_table)
 
         if equals_to is None:
             data = self.conn.copy_table(from_schema_table, to_schema_table, from_columns)
@@ -95,7 +102,7 @@ class CommonDataArchiver:
         self._report_results(data, specification=specification, mode="copy",
                              from_table=from_schema_table, to_table=to_schema_table)
 
-    def copy_tables(self, from_tables, to_tables, where_cols, equal_to_values):
+    def copy_tables(self, from_tables, to_tables, from_schema, to_schema, where_cols, equal_to_values):
         """
         Аналог функции copy_table, однако используемый для нескольких таблиц. from_tables, to_tables,
         where_cols, equal_to_values должны быть переданы как list обязательно.
@@ -109,23 +116,27 @@ class CommonDataArchiver:
         self._check_for_length(from_tables, to_tables)
         equal_to_values, where_cols = self._normalise_filter_values(equal_to_values, where_cols, len(from_tables))
 
-        for from_table, to_table, where_col, equals_to_ \
+        for from_table, to_table, where_col, equals_to \
                 in zip(from_tables, to_tables, where_cols, equal_to_values):
             self.copy_table(from_table, to_table,
-                            where_col=where_col, equals_to=equals_to_)
+                            from_schema_type=from_schema, to_schema_type=to_schema,
+                            where_col=where_col, equals_to=equals_to)
 
-    def delete_table(self, table, where_col, equal_to, schema):
-        schema_table_name = self._sql_name(schema, table)
+    def delete_table(self, table_name, where_col, equal_to, schema_type):
+        assert schema_type in ("main_schema", "archive_schema")
+        schema_name = self.config[schema_type]["schema_name"]
+
+        schema_table_name = self._sql_name(schema_name, table_name)
 
         data = self.conn.delete_table_where(schema_table_name, where_col, equal_to)
         spec = f"ГДЕ '{where_col}' == {equal_to}"
-        self._report_results(data, mode="delete", specification=spec, from_table=table)
+        self._report_results(data, mode="delete", specification=spec, from_table=table_name)
 
     def delete_tables(self, tables: list[str], schema: str, where_cols: list[str], equal_to_values: list[object]):
         equal_to_values, where_cols = self._normalise_filter_values(equal_to_values, where_cols, len(tables))
 
         for table, where_col, equal_to in zip(tables, where_cols, equal_to_values):
-            self.delete_table(table=table, where_col=where_col, equal_to=equal_to, schema=schema)
+            self.delete_table(table_name=table, where_col=where_col, equal_to=equal_to, schema_type=schema)
 
     def copy_metadata_entry(self, from_schema, to_schema):
         """
@@ -141,7 +152,7 @@ class CommonDataArchiver:
 
         self.copy_table(from_table, to_table,
                         where_col=meta_dataset_col, equals_to=self.meta_dataset_id,
-                        from_schema=from_schema, to_schema=to_schema)
+                        from_schema_type=from_schema, to_schema_type=to_schema)
 
     def delete_metadata_entry(self, schema):
         """
@@ -151,7 +162,8 @@ class CommonDataArchiver:
         upload_files_table = self.config[schema]["tables"]["upload_files"]
         table = upload_files_table["table_name"]
         meta_dataset_col = upload_files_table["req_cols"]["metaload_dataset_id"]
-        self.delete_table(table=table, where_col=meta_dataset_col, equal_to=self.meta_dataset_id)
+        self.delete_table(table_name=table, schema_type=schema, where_col=meta_dataset_col,
+                          equal_to=self.meta_dataset_id)
 
     def _report_results(self, data, specification, mode=None, from_table=None, to_table=None):
         """

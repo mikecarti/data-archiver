@@ -1,32 +1,11 @@
-2022-12-07 13:41:20 INFO: Macroeconomics Archiver running
-2022-12-07 13:41:20 INFO: Таблица 'public.upload_files'  скопирована в таблицу 'archive.upload_files'' ГДЕ 'id' == 2
-2022-12-07 13:41:20 INFO: Таблица 'public.macroeconomic_discount_rate'  скопирована в таблицу 'archive.macroeconomic_discount_rate'' ГДЕ 'metaload_dataset_id' == 2
-2022-12-07 13:41:20 INFO: Таблица 'public.macroeconomic_exchange_rates'  скопирована в таблицу 'archive.macroeconomic_exchange_rates'' ГДЕ 'metaload_dataset_id' == 2
-2022-12-07 13:41:21 INFO: Таблица 'public.macroeconomic_inflation_coeff'  скопирована в таблицу 'archive.macroeconomic_inflation_coeff'' ГДЕ 'metaload_dataset_id' == 2
-2022-12-07 13:41:21 INFO: Таблица 'public.macroeconomic_metal_prices'  скопирована в таблицу 'archive.macroeconomic_metal_prices'' ГДЕ 'metaload_dataset_id' == 2
-2022-12-07 13:41:21 INFO: Ряды таблицы 'public.macroeconomic_discount_rate ГДЕ 'metaload_dataset_id' == 2 УДАЛЕНЫ
-2022-12-07 13:41:21 INFO: Ряды таблицы 'public.macroeconomic_exchange_rates ГДЕ 'metaload_dataset_id' == 2 УДАЛЕНЫ
-2022-12-07 13:41:21 INFO: Ряды таблицы 'public.macroeconomic_inflation_coeff ГДЕ 'metaload_dataset_id' == 2 УДАЛЕНЫ
-2022-12-07 13:41:21 INFO: Ряды таблицы 'public.macroeconomic_metal_prices ГДЕ 'metaload_dataset_id' == 2 УДАЛЕНЫ
-2022-12-07 13:41:21 INFO: Ряды таблицы 'public.upload_files ГДЕ 'id' == 2 УДАЛЕНЫ
-2022-12-07 13:41:26 INFO: Macroeconomics Archiver running
-2022-12-07 13:41:26 INFO: Таблица 'public.upload_files'  скопирована в таблицу 'archive.upload_files'' ГДЕ 'id' == 2
-2022-12-07 13:41:26 WARNING: Из таблицы 'public.upload_files' не было найдено ни одного ряда по данному фильтру!
-2022-12-07 13:41:26 INFO: Таблица 'public.macroeconomic_discount_rate'  скопирована в таблицу 'archive.macroeconomic_discount_rate'' ГДЕ 'metaload_dataset_id' == 2
-2022-12-07 13:41:26 WARNING: Из таблицы 'public.macroeconomic_discount_rate' не было найдено ни одного ряда по данному фильтру!
-2022-12-07 13:41:26 INFO: Таблица 'public.macroeconomic_exchange_rates'  скопирована в таблицу 'archive.macroeconomic_exchange_rates'' ГДЕ 'metaload_dataset_id' == 2
-2022-12-07 13:41:26 WARNING: Из таблицы 'public.macroeconomic_exchange_rates' не было найдено ни одного ряда по данному фильтру!
-2022-12-07 13:41:26 INFO: Таблица 'public.macroeconomic_inflation_coeff'  скопирована в таблицу 'archive.macroeconomic_inflation_coeff'' ГДЕ 'metaload_dataset_id' == 2
-2022-12-07 13:41:26 WARNING: Из таблицы 'public.macroeconomic_inflation_coeff' не было найдено ни одного ряда по данному фильтру!
-2022-12-07 13:41:26 INFO: Таблица 'public.macroeconomic_metal_prices'  скопирована в таблицу 'archive.macroeconomic_metal_prices'' ГДЕ 'metaload_dataset_id' == 2
-2022-12-07 13:41:26 WARNING: Из таблицы 'public.macroeconomic_metal_prices' не было найдено ни одного ряда по данному фильтру!
-2022-12-07 13:41:26 INFO: Ряды таблицы 'public.macroeconomic_discount_rate ГДЕ 'metaload_dataset_id' == 2 УДАЛЕНЫ
-2022-12-07 13:41:26 WARNING: Из таблицы 'public.macroeconomic_discount_rate' не было найдено ни одного ряда по данному фильтру!
-2022-12-07 13:41:26 INFO: Ряды таблицы 'public.macroeconomic_exchange_rates ГДЕ 'metaload_dataset_id' == 2 УДАЛЕНЫ
-2022-12-07 13:41:26 WARNING: Из таблицы 'public.macroeconomic_exchange_rates' не было найдено ни одного ряда по данному фильтру!
-2022-12-07 13:41:26 INFO: Ряды таблицы 'public.macroeconomic_inflation_coeff ГДЕ 'metaload_dataset_id' == 2 УДАЛЕНЫ
-2022-12-07 13:41:26 WARNING: Из таблицы 'public.macroeconomic_inflation_coeff' не было найдено ни одного ряда по данному фильтру!
-2022-12-07 13:41:26 INFO: Ряды таблицы 'public.macroeconomic_metal_prices ГДЕ 'metaload_dataset_id' == 2 УДАЛЕНЫ
-2022-12-07 13:41:26 WARNING: Из таблицы 'public.macroeconomic_metal_prices' не было найдено ни одного ряда по данному фильтру!
-2022-12-07 13:41:26 INFO: Ряды таблицы 'public.upload_files ГДЕ 'id' == 2 УДАЛЕНЫ
-2022-12-07 13:41:26 WARNING: Из таблицы 'public.upload_files' не было найдено ни одного ряда по данному фильтру!
+2022-12-07 14:26:37 INFO: Macroeconomics Archiver running
+2022-12-07 14:26:37 WARNING: Из таблицы 'public.upload_files' не было найдено ни одного ряда ГДЕ 'id' == 2!
+2022-12-07 14:26:37 WARNING: Из таблицы 'public.macroeconomic_discount_rate' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 2!
+2022-12-07 14:26:37 WARNING: Из таблицы 'public.macroeconomic_exchange_rates' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 2!
+2022-12-07 14:26:37 WARNING: Из таблицы 'public.macroeconomic_inflation_coeff' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 2!
+2022-12-07 14:26:37 WARNING: Из таблицы 'public.macroeconomic_metal_prices' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 2!
+2022-12-07 14:26:37 WARNING: Из таблицы 'macroeconomic_discount_rate' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 2!
+2022-12-07 14:26:37 WARNING: Из таблицы 'macroeconomic_exchange_rates' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 2!
+2022-12-07 14:26:37 WARNING: Из таблицы 'macroeconomic_inflation_coeff' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 2!
+2022-12-07 14:26:37 WARNING: Из таблицы 'macroeconomic_metal_prices' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 2!
+2022-12-07 14:26:37 WARNING: Из таблицы 'upload_files' не было найдено ни одного ряда ГДЕ 'id' == 2!

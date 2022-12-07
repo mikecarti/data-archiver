@@ -41,12 +41,12 @@ class DBCon:
         with self.conn.cursor() as cur:
             cur.execute(
                 f"""
-                INSERT INTO %(to_schema_table)s ({columns})
+                INSERT INTO %(to_table)s ({columns})
                 SELECT {columns} 
-                FROM %(from_schema_table)s
+                FROM %(from_table)s
                 RETURNING {columns}
                 """,
-                {'to_schema_table': to_schema_table, 'from_schema_table': from_schema_table}
+                {'to_table': to_schema_table, 'from_table': from_schema_table}
             )
             some_data = cur.fetchall()
             return some_data
@@ -55,14 +55,14 @@ class DBCon:
         with self.conn.cursor() as cur:
             cur.execute(
                 f"""
-                INSERT INTO %(to_schema_table)s ({columns})
+                INSERT INTO %(to_table)s ({columns})
                 SELECT {columns} 
-                FROM %(from_schema_table)s
+                FROM %(from_table)s
                 WHERE %(where_col)s = %(equals_to)s
                 RETURNING %(where_col)s
                 """,
                 {
-                    'to_schema_table': to_schema_table, 'from_schema_table': from_schema_table,
+                    'to_table': to_schema_table, 'from_table': from_schema_table,
                     'where_col': AsIs(where_col), 'equals_to': AsIs(equals_to)
                 }
             )

@@ -48,8 +48,6 @@ class CommonDataArchiver:
 
         self.delete_tables(tables_db_names, where_cols=metaload_id_cols, equal_to_values=[self.meta_dataset_id])
 
-
-
     def archive_tables(self):
         raise NotImplementedError("Must override archive_tables")
 
@@ -81,7 +79,8 @@ class CommonDataArchiver:
                                               from_columns, where_col, equals_to)
             specification = f"ГДЕ '{where_col}' == {equals_to}"
 
-        self._report_results(data, from_schema_table, specification, to_schema_table)
+        self._report_results(data, specification=specification, mode="copy",
+                             from_table=from_schema_table, to_table=to_schema_table)
 
     def copy_tables(self, from_tables, to_tables, where_cols, equal_to_values):
         """
@@ -107,10 +106,8 @@ class CommonDataArchiver:
         schema_table_name = self._sql_name(schema, table)
 
         data = self.conn.delete_table_where(schema_table_name, where_col, equal_to)
-        self.logger.info(f"Ряды таблицы '{schema_table_name} ГДЕ '{where_col}' == {equal_to} УДАЛЕНЫ")
-        if self._query_result_empty(data):
-            self._report_results(data, schema_table_name)
-        self._report_empty_result(data, schema_table_name)
+        spec = f"ГДЕ '{where_col}' == {equal_to}"
+        self._report_results(data, mode="delete", specification=spec, from_table=table)
 
     def delete_tables(self, tables: list[str], where_cols: list[str], equal_to_values: list[object]):
         equal_to_values, where_cols = self._normalise_filter_values(equal_to_values, where_cols, len(tables))
@@ -143,18 +140,29 @@ class CommonDataArchiver:
         meta_dataset_col = upload_files_table["req_cols"]["metaload_dataset_id"]
         self.delete_table(table=table, where_col=meta_dataset_col, equal_to=self.meta_dataset_id)
 
-    def _report_results(self, data, from_schema_table, to_schema_table, where_col, equal_to, specification, mode=None):
+    def _report_results(self, data, specification, mode=None, from_table=None, to_table=None):
+        """
+        :param data:
+        :param specification:
+        :param mode:
+        :param from_table:
+        :param to_table:
+        :return:
+        """
         match mode:
             case "copy":
                 if self._query_result_empty(data):
-                    self.logger.warning(f"Из таблицы '{from_schema_table}' не было найдено ни одного ряда по данному фильтру!")
+                    self.logger.warning(
+                        f"Из таблицы '{from_table}' не было найдено ни одного ряда {specification}!")
                 else:
-                    self.logger.info(f"Таблица '{from_schema_table}' скопирована в таблицу '{to_schema_table}' {specification}")
+                    self.logger.info(
+                        f"Таблица '{from_table}' скопирована в таблицу '{to_table}' {specification}")
             case "delete":
                 if self._query_result_empty(data):
-                    self.logger.warning(f"Из таблицы '{from_schema_table}' не было найдено ни одного ряда по данному фильтру!")
+                    self.logger.warning(
+                        f"Из таблицы '{from_table}' не было найдено ни одного ряда {specification}!")
                 else:
-                    self.logger.info(f"Ряды таблицы '{from_schema_table} ГДЕ '{where_col}' == {equal_to} УДАЛЕНЫ")
+                    self.logger.info(f"Ряды таблицы '{from_table} {specification} УДАЛЕНЫ!")
             case _:
                 raise NotImplementedError()
 
@@ -199,8 +207,10 @@ class CommonDataArchiver:
             columns_names = columns_names * elements_num
         elif len(columns_names) > 1 and len(equal_to_values) == 1:
             equal_to_values = equal_to_values * len(columns_names)
-        assert len(equal_to_values) == elements_num, f"Ошибка, len(equal_to_values): {len(equal_to_values)}, elements_num: {elements_num}"
-        assert len(columns_names) == elements_num, f"Ошибка, len(columns_names): {len(columns_names)}, elements_num: {elements_num}"
+        assert len(
+            equal_to_values) == elements_num, f"Ошибка, len(equal_to_values): {len(equal_to_values)}, elements_num: {elements_num}"
+        assert len(
+            columns_names) == elements_num, f"Ошибка, len(columns_names): {len(columns_names)}, elements_num: {elements_num}"
 
         return equal_to_values, columns_names
 
@@ -253,6 +263,7 @@ class CommonDataArchiver:
             self.logger.warning(f"Из таблицы '{schema_table_name}' не было найдено ни одного ряда по данному фильтру!")
             return True
         return False
+
     def _query_result_empty(self, data):
         empty_list = len(data) == 0
         none_type = not data

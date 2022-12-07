@@ -1,5 +1,0 @@
-2022-12-07 17:17:08 INFO: Cost Archiver running
-2022-12-07 17:17:08 INFO: Таблица 'archive.upload_files' скопирована в таблицу 'public.upload_files' ГДЕ 'id' == 8
-2022-12-07 17:17:08 INFO: Таблица 'archive.cost' скопирована в таблицу 'public.cost' ГДЕ 'metaload_dataset_id' == 8
-2022-12-07 17:17:08 INFO: Ряды таблицы 'archive.cost ГДЕ 'metaload_dataset_id' == 8 УДАЛЕНЫ!
-2022-12-07 17:17:08 INFO: Ряды таблицы 'archive.upload_files ГДЕ 'id' == 8 УДАЛЕНЫ!

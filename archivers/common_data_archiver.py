@@ -25,31 +25,34 @@ class CommonDataArchiver:
             status = False
         return status
 
-    def prepare_copying_tables(self):
-        from_tables = self._get_db_table_names("main_schema", without="upload_files")
-        to_tables = self._get_db_table_names("main_schema", without="upload_files")
+    def prepare_copying_tables(self, from_schema, to_schema):
+        from_tables = self._get_db_table_names(from_schema, without="upload_files")
+        to_tables = self._get_db_table_names(to_schema, without="upload_files")
 
-        from_tables_json_names = self._get_json_table_names(schema="main_schema", without="upload_files")
+        from_tables_json_names = self._get_json_table_names(schema=from_schema, without="upload_files")
 
         metaload_id_cols = self._get_required_columns_names_for_bd(json_column_name="metaload_dataset_id",
-                                                                   schema="main_schema",
+                                                                   schema=from_schema,
                                                                    tables_json_names=from_tables_json_names)
 
         self.copy_tables(from_tables, to_tables, where_cols=metaload_id_cols,
                          equal_to_values=[self.meta_dataset_id])
 
-    def prepare_deleting_tables(self):
-        tables_db_names = self._get_db_table_names("main_schema", without="upload_files")
-        tables_json_names = self._get_json_table_names("main_schema", without="upload_files")
+    def prepare_deleting_tables(self, schema):
+        tables_db_names = self._get_db_table_names(schema, without="upload_files")
+        tables_json_names = self._get_json_table_names(schema, without="upload_files")
 
         metaload_id_cols = self._get_required_columns_names_for_bd(json_column_name="metaload_dataset_id",
-                                                                   schema="main_schema",
+                                                                   schema=schema,
                                                                    tables_json_names=tables_json_names)
 
         self.delete_tables(tables_db_names, where_cols=metaload_id_cols, equal_to_values=[self.meta_dataset_id])
 
     def archive_tables(self):
-        raise NotImplementedError("Must override archive_tables")
+        self.copy_metadata_entry()
+        self.prepare_copying_tables(from_schema="main_schema", to_schema="archive_schema")
+        self.prepare_deleting_tables(schema="main_schema")
+        self.delete_metadata_entry()
 
     def copy_table(self, from_table, to_table,
                    from_schema=None, to_schema=None,
@@ -153,14 +156,16 @@ class CommonDataArchiver:
             case "copy":
                 if self._query_result_empty(data):
                     self.logger.warning(
-                        f"Из таблицы '{from_table}' не было найдено ни одного ряда {specification}!")
+                        f"Из таблицы '{from_table}' не было найдено ни одного ряда {specification}. Ничего не было "
+                        f"скопировано!")
                 else:
                     self.logger.info(
                         f"Таблица '{from_table}' скопирована в таблицу '{to_table}' {specification}")
             case "delete":
                 if self._query_result_empty(data):
                     self.logger.warning(
-                        f"Из таблицы '{from_table}' не было найдено ни одного ряда {specification}!")
+                        f"Из таблицы '{from_table}' не было найдено ни одного ряда {specification}. Ничего не было "
+                        f"удалено!")
                 else:
                     self.logger.info(f"Ряды таблицы '{from_table} {specification} УДАЛЕНЫ!")
             case _:

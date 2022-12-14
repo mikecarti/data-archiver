@@ -60,7 +60,7 @@ class DataArchiverMain:
         print(f" [x] Received status: {status}, comment:\n{comment}")
 
         status_code = 2 if status else 3
-        status_text = "Файл успешно загружен." if status else "Файл загружен с ошибкой!"
+        status_text = "Файл успешно заархивирован." if status else "Файл заархивирован с ошибкой!"
         cur_time = pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')
         data_archiver.conn.set_task_state(status_code, status_text, comment, data_from_body["task_id"], cur_time)
 

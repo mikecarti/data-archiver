@@ -36,6 +36,7 @@ class DBCon:
                 """,
                 [status_code, status_text, error_description, updated_at, task_id],
             )
+        self.conn.commit()
 
     def copy_table(self, from_schema_table: str, to_schema_table: str, columns: str):
         with self.conn.cursor() as cur:

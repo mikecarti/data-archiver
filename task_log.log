@@ -1,22 +1,25 @@
-2022-12-07 18:19:13 INFO: Macroeconomics Archiver running
-2022-12-07 18:19:13 WARNING: Из таблицы 'public.upload_files' не было найдено ни одного ряда ГДЕ 'id' == 6. Ничего не было скопировано!
-2022-12-07 18:19:13 WARNING: Из таблицы 'public.macroeconomic_discount_rate' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было скопировано!
-2022-12-07 18:19:13 WARNING: Из таблицы 'public.macroeconomic_exchange_rates' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было скопировано!
-2022-12-07 18:19:13 WARNING: Из таблицы 'public.macroeconomic_inflation_coeff' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было скопировано!
-2022-12-07 18:19:13 WARNING: Из таблицы 'public.macroeconomic_metal_prices' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было скопировано!
-2022-12-07 18:19:13 WARNING: Из таблицы 'public.macroeconomic_discount_rate' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было удалено!
-2022-12-07 18:19:13 WARNING: Из таблицы 'public.macroeconomic_exchange_rates' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было удалено!
-2022-12-07 18:19:13 WARNING: Из таблицы 'public.macroeconomic_inflation_coeff' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было удалено!
-2022-12-07 18:19:13 WARNING: Из таблицы 'public.macroeconomic_metal_prices' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было удалено!
-2022-12-07 18:19:13 WARNING: Из таблицы 'public.upload_files' не было найдено ни одного ряда ГДЕ 'id' == 6. Ничего не было удалено!
-2022-12-07 18:19:18 INFO: Macroeconomics Archiver running
-2022-12-07 18:19:18 WARNING: Из таблицы 'public.upload_files' не было найдено ни одного ряда ГДЕ 'id' == 6. Ничего не было скопировано!
-2022-12-07 18:19:18 WARNING: Из таблицы 'public.macroeconomic_discount_rate' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было скопировано!
-2022-12-07 18:19:18 WARNING: Из таблицы 'public.macroeconomic_exchange_rates' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было скопировано!
-2022-12-07 18:19:18 WARNING: Из таблицы 'public.macroeconomic_inflation_coeff' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было скопировано!
-2022-12-07 18:19:18 WARNING: Из таблицы 'public.macroeconomic_metal_prices' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было скопировано!
-2022-12-07 18:19:18 WARNING: Из таблицы 'public.macroeconomic_discount_rate' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было удалено!
-2022-12-07 18:19:18 WARNING: Из таблицы 'public.macroeconomic_exchange_rates' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было удалено!
-2022-12-07 18:19:18 WARNING: Из таблицы 'public.macroeconomic_inflation_coeff' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было удалено!
-2022-12-07 18:19:18 WARNING: Из таблицы 'public.macroeconomic_metal_prices' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 6. Ничего не было удалено!
-2022-12-07 18:19:18 WARNING: Из таблицы 'public.upload_files' не было найдено ни одного ряда ГДЕ 'id' == 6. Ничего не было удалено!
+2022-12-14 21:11:17 INFO: Production Plans Archiver running
+2022-12-14 21:11:18 WARNING: Из таблицы 'public.upload_files' не было найдено ни одного ряда ГДЕ 'id' == 23. Ничего не было скопировано!
+2022-12-14 21:11:18 WARNING: Из таблицы 'public.production_plans' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было скопировано!
+2022-12-14 21:11:18 WARNING: Из таблицы 'public.production_plans_initial_nzp' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было скопировано!
+2022-12-14 21:11:18 WARNING: Из таблицы 'public.production_plans_initial_sklad' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было скопировано!
+2022-12-14 21:11:18 WARNING: Из таблицы 'public.production_plans' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было удалено!
+2022-12-14 21:11:18 WARNING: Из таблицы 'public.production_plans_initial_nzp' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было удалено!
+2022-12-14 21:11:18 WARNING: Из таблицы 'public.production_plans_initial_sklad' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было удалено!
+2022-12-14 21:11:18 WARNING: Из таблицы 'public.upload_files' не было найдено ни одного ряда ГДЕ 'id' == 23. Ничего не было удалено!
+21:10:32 WARNING: Из таблицы 'public.production_plans' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было скопировано!
+2022-12-14 21:10:32 WARNING: Из таблицы 'public.production_plans_initial_nzp' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было скопировано!
+2022-12-14 21:10:32 WARNING: Из таблицы 'public.production_plans_initial_sklad' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было скопировано!
+2022-12-14 21:10:32 WARNING: Из таблицы 'public.production_plans' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было удалено!
+2022-12-14 21:10:32 WARNING: Из таблицы 'public.production_plans_initial_nzp' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было удалено!
+2022-12-14 21:10:32 WARNING: Из таблицы 'public.production_plans_initial_sklad' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было удалено!
+2022-12-14 21:10:32 WARNING: Из таблицы 'public.upload_files' не было найдено ни одного ряда ГДЕ 'id' == 23. Ничего не было удалено!
+2022-12-14 21:13:04 INFO: Production Plans Archiver running
+2022-12-14 21:13:04 WARNING: Из таблицы 'public.upload_files' не было найдено ни одного ряда ГДЕ 'id' == 23. Ничего не было скопировано!
+2022-12-14 21:13:04 WARNING: Из таблицы 'public.production_plans' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было скопировано!
+2022-12-14 21:13:04 WARNING: Из таблицы 'public.production_plans_initial_nzp' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было скопировано!
+2022-12-14 21:13:04 WARNING: Из таблицы 'public.production_plans_initial_sklad' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было скопировано!
+2022-12-14 21:13:04 WARNING: Из таблицы 'public.production_plans' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было удалено!
+2022-12-14 21:13:04 WARNING: Из таблицы 'public.production_plans_initial_nzp' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было удалено!
+2022-12-14 21:13:04 WARNING: Из таблицы 'public.production_plans_initial_sklad' не было найдено ни одного ряда ГДЕ 'metaload_dataset_id' == 23. Ничего не было удалено!
+2022-12-14 21:13:04 WARNING: Из таблицы 'public.upload_files' не было найдено ни одного ряда ГДЕ 'id' == 23. Ничего не было удалено!

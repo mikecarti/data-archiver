@@ -146,5 +146,85 @@
         }
       }
     }
+  },
+  "invest_event": {
+        "schemas": {
+      "main_schema": "public",
+      "archive_schema": "archive"
+    },
+    "tables": {
+      "upload_files": {
+        "table_name": "upload_files",
+        "req_cols": {
+          "metaload_dataset_id": "id"
+        }
+      },
+      "invest_event": {
+        "table_name": "invest_event",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
+        }
+      }
+    }
+  },
+  "operational_event_toir": {
+        "schemas": {
+      "main_schema": "public",
+      "archive_schema": "archive"
+    },
+    "tables": {
+      "upload_files": {
+        "table_name": "upload_files",
+        "req_cols": {
+          "metaload_dataset_id": "id"
+        }
+      },
+      "operational_event_toir": {
+        "table_name": "operational_event_toir",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
+        }
+      }
+    }
+  },
+  "risks": {
+        "schemas": {
+      "main_schema": "public",
+      "archive_schema": "archive"
+    },
+    "tables": {
+      "upload_files": {
+        "table_name": "upload_files",
+        "req_cols": {
+          "metaload_dataset_id": "id"
+        }
+      },
+      "risks": {
+        "table_name": "risks",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
+        }
+      }
+    }
+  },
+  "production_contininuity_plan": {
+        "schemas": {
+      "main_schema": "public",
+      "archive_schema": "archive"
+    },
+    "tables": {
+      "upload_files": {
+        "table_name": "upload_files",
+        "req_cols": {
+          "metaload_dataset_id": "id"
+        }
+      },
+      "production_contininuity_plan": {
+        "table_name": "production_contininuity_plan",
+        "req_cols": {
+          "metaload_dataset_id": "metaload_dataset_id"
+        }
+      }
+    }
   }
 }

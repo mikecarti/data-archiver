@@ -2,17 +2,30 @@ from psycopg2._psycopg import AsIs
 import traceback
 
 
-class CommonDataArchiver:
+class DataArchiver:
     def __init__(self, conn, in_schemas, logger, task_type):
+        self.meta_dataset_id = None
         self.conn = conn
         self.logger = logger
         self.task_type = task_type
         self.config = in_schemas[task_type]
 
-    def common_run(self, task_type: str):
+    def run(self, d: dict):
+        task_type = d['file_type']
+        mode = d["type"]
+        self.meta_dataset_id = d["metaload_dataset_id"]
+        self.logger.info(f"{task_type} running")
+
         try:
-            self.archive_tables()
-            # self.recover_tables_from_archive()
+            if mode == "archive":
+                self.archive_tables()
+            elif mode == "recover":
+                self.recover_tables_from_archive()
+            else:
+                raise ValueError(
+                    "Значение mode должно равняться 'archive' или 'recover', проверьте правильность поля 'type' в "
+                    "приходящем JSON")
+
             self.conn.conn.commit()
             status = True
         except Exception as e:

@@ -6,8 +6,8 @@ import os
 import main
 import threading
 
-from archivers.common_data_archiver import CommonDataArchiver
-from interface_data_archiver import DataArchiver
+from archivers.common_data_archiver import DataArchiver
+from interface_data_archiver import DataArchiverInterface
 
 class TestDataArchiver(unittest.TestCase):
 
@@ -38,23 +38,23 @@ class TestDataArchiver(unittest.TestCase):
         return data
 
     def get_json_data(self):
-        d = DataArchiver.parse_json('json_files/table_data_schemas.json')
+        d = DataArchiverInterface.parse_json('json_files/table_data_schemas.json')
         return d
 
     def test_get_json_table_names_return_table_names(self):
         d = self.get_json_data()
-        c = CommonDataArchiver(None, in_schemas=d, logger=None, task_type="archive_production_graph")
+        c = DataArchiverInterface(None, in_schemas=d, logger=None, task_type="archive_production_graph")
         names = c._get_json_table_names("main_schema")
         self.assertEqual(["production_graph_edges", "production_graph_nodes", "upload_files"], names)
 
     def test_get_json_table_names_return_table_names_without_some_name(self):
         d = self.get_json_data()
-        c = CommonDataArchiver(None, in_schemas=d, logger=None, task_type="archive_production_graph")
+        c = DataArchiverInterface(None, in_schemas=d, logger=None, task_type="archive_production_graph")
         names = c._get_json_table_names("main_schema", without="upload_files")
         self.assertEqual(["production_graph_edges", "production_graph_nodes"], names)
 
     def test_get_task_type_concatinates_correctly(self):
-        i = DataArchiver(None, None)
+        i = DataArchiverInterface(None, None)
         dic = {'type': 'archive', 'file_type': 'production_graph'}
         task_type = i.get_task_type(dic)
         self.assertEqual('archive_production_graph', task_type)

@@ -9,7 +9,7 @@ from db_con import DBCon
 import pandas as pd
 from io import StringIO
 
-from interface_data_archiver import DataArchiver
+from interface_data_archiver import DataArchiverInterface
 
 TASK_TOPIC = "archive_queue"
 SOCKET_TOPIC = "Setting"
@@ -41,7 +41,7 @@ class DataArchiverMain:
                 print("----------------Connection to db established----------------")
                 # print("NOW WE CAN CHANGE DOCKER IN REAL TIME ONCE AGAIN")
                 stream = StringIO()
-                data_archiver = DataArchiver(conn, stream)
+                data_archiver = DataArchiverInterface(conn, stream)
                 callback = functools.partial(self.on_message, data_archiver=data_archiver)
                 self.ch.basic_consume(queue=TASK_TOPIC, on_message_callback=callback)
                 self.ch.start_consuming()

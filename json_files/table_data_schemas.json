@@ -1,5 +1,5 @@
 {
-  "archive_business_orgs_spr": {
+  "business_orgs_spr": {
     "schemas": {
       "main_schema": "public",
       "archive_schema": "archive"
@@ -11,7 +11,7 @@
       }
     }
   },
-  "archive_production_graph": {
+  "production_graph": {
     "schemas": {
       "main_schema": "public",
       "archive_schema": "archive"
@@ -37,7 +37,7 @@
       }
     }
   },
-  "archive_macroeconomics": {
+  "macroeconomics": {
     "schemas": {
       "main_schema": "public",
       "archive_schema": "archive"
@@ -75,7 +75,7 @@
       }
     }
   },
-  "archive_production_plan": {
+  "production_plan": {
     "schemas": {
       "main_schema": "public",
       "archive_schema": "archive"
@@ -107,7 +107,7 @@
       }
     }
   },
-  "archive_cost": {
+  "cost": {
     "schemas": {
       "main_schema": "public",
       "archive_schema": "archive"
@@ -127,7 +127,7 @@
       }
     }
   },
-  "archive_failure_schedule": {
+  "failure_schedule": {
     "schemas": {
       "main_schema": "public",
       "archive_schema": "archive"

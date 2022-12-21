@@ -4,15 +4,10 @@ import warnings
 import logging
 import logging.config
 
-from archivers.business_org_archiver import BusinessOrgArchiver
-from archivers.production_graph_archiver import ProductGraphArchiver
-from archivers.macroeconomic_archiver import MacroeconomicsArchiver
-from archivers.production_plans_archiver import ProductionPlansArchiver
-from archivers.cost_archiver import CostArchiver
-from archivers.failure_schedule_archiver import FailureScheduleArchiver
+from archivers.common_data_archiver import DataArchiver
 
 
-class DataArchiver:
+class DataArchiverInterface:
 
     def __init__(self, conn, log_stream):
         self.conn = conn
@@ -37,39 +32,21 @@ class DataArchiver:
 
     def run(self, d):
         self.comment = ""
-        status, comment = False, "[Upload Error] Неизвестный тип файла!"
 
-        task_type = self.get_task_type(d)
-        match task_type:
-            case "archive_business_orgs_spr":
-                orgs_arch = BusinessOrgArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
-                status = orgs_arch.run(d)
-            case "archive_production_graph":
-                prod_arch = ProductGraphArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
-                status = prod_arch.run(d)
-            case "archive_macroeconomics":
-                macro_econ_arch = MacroeconomicsArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
-                status = macro_econ_arch.run(d)
-            case "archive_production_plan":
-                prod_plans_arch = ProductionPlansArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
-                status = prod_plans_arch.run(d)
-            case "archive_cost":
-                cost_arch = CostArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
-                status = cost_arch.run(d)
-            case "archive_failure_schedule":
-                fail_sch_arch = FailureScheduleArchiver(self.conn, self.in_schemas, self.logger, task_type=task_type)
-                status = fail_sch_arch.run(d)
-            case _:
-                print(f"Unregistered task_type: {task_type}")
+        task_type = d["file_type"]
+
+        if self.task_is_in_json(task_type):
+            archiver = DataArchiver(conn=self.conn, in_schemas=self.in_schemas, logger=self.logger,
+                                    task_type=task_type)
+            status = archiver.run(d)
+        else:
+            self.logger.error(f"Unregistered task_type: {task_type}")
+            status, comment = False, "[Upload Error] Неизвестный тип файла!"
 
         comment = self.stream.getvalue()
         self.stream.seek(0)
         self.stream.truncate(0)
         return status, comment
-
-    def get_task_type(self, d):
-        task_type = f"{d['type']}_{d['file_type']}"
-        return task_type
 
     def config_task_logger(self, logger_name, logger_filename, stream):
         DEFAULT_LOGGING = {
@@ -93,14 +70,17 @@ class DataArchiver:
             },
             'loggers': {
                 logger_name: {'level': 'DEBUG',
-                           'handlers': ['console', 'file'],
-                           'propagate': False},
+                              'handlers': ['console', 'file'],
+                              'propagate': False},
             }
         }
         logging.config.dictConfig(DEFAULT_LOGGING)
         log = logging.getLogger(logger_name)
         return log
 
+    def task_is_in_json(self, task_type):
+        possible_tasks = list(self.in_schemas.keys())
+        return task_type in possible_tasks
 
 
 if __name__ == "__main__":
@@ -108,5 +88,5 @@ if __name__ == "__main__":
     file_loc = r"upload_files\1_year\scenario\production_graph.xlsx"
     _abs_path = os.path.join(data_folder, file_loc)
 
-    du = DataArchiver()
+    du = DataArchiverInterface()
     du.parse_excel(_abs_path)
